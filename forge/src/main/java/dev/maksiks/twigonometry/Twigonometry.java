@@ -12,8 +12,8 @@ public class Twigonometry {
         // project.
 
         // Use Forge to bootstrap the Common mod.
-        Constants.LOG.info("Hello Forge world!");
-        CommonClass.init();
+        Constants.LOG.info("Twigonometry: Twigonometry forge engines mathed");
+        TwigonometryCommon.init();
 
     }
 }

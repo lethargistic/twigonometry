@@ -12,7 +12,7 @@ public class Twigonometry implements ModInitializer {
         // project.
 
         // Use Fabric to bootstrap the Common mod.
-        Constants.LOG.info("Hello Fabric world!");
-        CommonClass.init();
+        Constants.LOG.info("Twigonometry: Twigonometry fabric engines mathed");
+        TwigonometryCommon.init();
     }
 }
