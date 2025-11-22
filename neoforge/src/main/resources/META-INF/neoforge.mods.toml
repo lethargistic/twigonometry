@@ -1,5 +1,5 @@
 modLoader = "kotlinforforge" #mandatory
-loaderVersion="[5.10,)" #mandatory
+loaderVersion="[5.6,)" #mandatory
 license = "${license}" # Review your options at https://choosealicense.com/.
 #issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
 [[mods]] #mandatory

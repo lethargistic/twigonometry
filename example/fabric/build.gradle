@@ -2,6 +2,15 @@ plugins {
     id 'multiloader-loader'
     id 'fabric-loom'
 }
+
+// Twigonometry: referencing parent properties so i dont have to write them every time, you can delete this
+def parentProps = new Properties()
+file('../../gradle.properties').withInputStream { parentProps.load(it) }
+ext {
+    root_version = parentProps.getProperty('version')
+    root_minecraft_version = parentProps.getProperty('minecraft_version')
+}
+
 dependencies {
     minecraft "com.mojang:minecraft:${minecraft_version}"
     mappings loom.layered {
@@ -10,6 +19,14 @@ dependencies {
     }
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+
+    // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
+    modImplementation group: 'dev.maksiks.twigonometry', name: "twigonometry-fabric-${root_minecraft_version}", version: "${root_version}"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
 }
 
 loom {

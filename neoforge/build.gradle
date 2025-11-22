@@ -1,8 +1,8 @@
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
-    id 'org.jetbrains.kotlin.jvm' version '2.2.20'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.2.20'
+    id 'org.jetbrains.kotlin.jvm' version '2.0.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '2.0.0'
     id 'org.jetbrains.dokka' version '2.0.0'
 }
 
@@ -15,7 +15,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.10.0'
+    implementation 'thedarkcolour:kotlinforforge-neoforge:5.6.0'
 }
 
 neoForge {
@@ -57,3 +57,16 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+kotlin {
+    jvmToolchain(21)
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:2.0.0"
+}

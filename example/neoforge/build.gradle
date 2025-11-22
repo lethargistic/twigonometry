@@ -3,6 +3,14 @@ plugins {
     id 'net.neoforged.moddev'
 }
 
+// Twigonometry: referencing parent properties so i dont have to write them every time, you can delete this
+def parentProps = new Properties()
+file('../../gradle.properties').withInputStream { parentProps.load(it) }
+ext {
+    root_version = parentProps.getProperty('version')
+    root_minecraft_version = parentProps.getProperty('minecraft_version')
+}
+
 neoForge {
     version = neoforge_version
     // Automatically enable neoforge AccessTransformers if the file exists
@@ -42,3 +50,19 @@ neoForge {
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    implementation 'thedarkcolour:kotlinforforge-neoforge:5.10.0'
+    // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
+    implementation group: 'dev.maksiks.twigonometry', name: "twigonometry-neoforge-${root_minecraft_version}", version: "${root_version}"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+
+    maven {
+        name = 'Kotlin for Forge'
+        url = 'https://thedarkcolour.github.io/KotlinForForge/'
+    }
+}

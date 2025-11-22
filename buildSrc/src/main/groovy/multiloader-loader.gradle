@@ -46,3 +46,8 @@ tasks.named('sourcesJar', Jar) {
     dependsOn(configurations.commonResources)
     from(configurations.commonResources)
 }
+
+tasks.named('compileKotlin') {
+    dependsOn(configurations.commonJava)
+    source(configurations.commonJava)
+}
