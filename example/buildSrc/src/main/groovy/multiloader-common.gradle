@@ -3,10 +3,6 @@ plugins {
     id 'maven-publish'
 }
 
-subprojects {
-    apply plugin: 'org.jetbrains.dokka-javadoc'
-}
-
 base {
     archivesName = "${mod_id}-${project.name}-${minecraft_version}"
 }

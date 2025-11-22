@@ -1,21 +1,6 @@
 plugins {
     id 'multiloader-loader'
     id 'net.neoforged.moddev'
-    id 'org.jetbrains.kotlin.jvm' version '2.2.20'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '2.2.20'
-    id 'org.jetbrains.dokka' version '2.0.0'
-}
-
-repositories {
-    // Add KFF Maven repository
-    maven {
-        name = 'Kotlin for Forge'
-        url = 'https://thedarkcolour.github.io/KotlinForForge/'
-    }
-}
-
-dependencies {
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.10.0'
 }
 
 neoForge {

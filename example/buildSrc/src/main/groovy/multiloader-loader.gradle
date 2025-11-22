@@ -1,7 +1,5 @@
 plugins {
     id 'multiloader-common'
-    id 'org.jetbrains.kotlin.jvm'
-    id 'org.jetbrains.dokka'
 }
 
 configurations {
@@ -33,11 +31,9 @@ processResources {
     from(configurations.commonResources)
 }
 
-tasks.named("dokkaHtml") {
+tasks.named('javadoc', Javadoc).configure {
     dependsOn(configurations.commonJava)
-    dokkaSourceSets.configureEach {
-        sourceRoots.from(configurations.commonJava)
-    }
+    source(configurations.commonJava)
 }
 
 tasks.named('sourcesJar', Jar) {

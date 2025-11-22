@@ -1,11 +1,7 @@
 plugins {
     id 'multiloader-common'
     id 'net.neoforged.moddev'
-    id 'maven-publish'
-    id 'org.jetbrains.kotlin.jvm' version '2.2.0'
-    id 'org.jetbrains.dokka' version '2.0.0'
 }
-
 
 neoForge {
     neoFormVersion = neo_form_version
@@ -20,12 +16,22 @@ neoForge {
     }
 }
 
+// Twigonometry: referencing parent properties so i dont have to write them every time, you can delete this
+def parentProps = new Properties()
+file('../../gradle.properties').withInputStream { parentProps.load(it) }
+ext {
+    root_version = parentProps.getProperty('version')
+    root_minecraft_version = parentProps.getProperty('minecraft_version')
+}
+
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
     // fabric and neoforge both bundle mixinextras, so it is safe to use it in common
     compileOnly group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+    // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
+    implementation group: 'dev.maksiks.twigonometry', name: "twigonometry-common-${root_minecraft_version}", version: "${root_version}"
 }
 
 configurations {
@@ -43,10 +49,8 @@ artifacts {
     commonJava sourceSets.main.java.sourceDirectories.singleFile
     commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }
+
 repositories {
+    mavenLocal()
     mavenCentral()
 }
-kotlin {
-    jvmToolchain(21)
-}
-
