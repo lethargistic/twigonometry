@@ -21,7 +21,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
-    modImplementation group: 'dev.maksiks.twigonometry', name: "twigonometry-fabric-${root_minecraft_version}", version: "${root_version}"
+    modImplementation group: 'dev.maksiks.twigonometry', name: "twigonometry-common-${root_minecraft_version}", version: "${root_version}"
 }
 
 repositories {

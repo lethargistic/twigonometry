@@ -1,5 +1,6 @@
 package dev.maksiks.twigonometry.api
 
+import dev.maksiks.twigonometry.api.LayerPattern.Companion.matchesPattern
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
@@ -19,12 +20,18 @@ import kotlin.math.atan2
 import kotlin.math.sqrt
 
 @JvmField
-val diagonals: Array<Direction> = arrayOf(
+val DIAGONALS: Array<Direction> = arrayOf(
     Direction.NORTH, Direction.EAST,
     Direction.NORTH, Direction.WEST,
     Direction.SOUTH, Direction.EAST,
     Direction.SOUTH, Direction.WEST
 )
+
+@JvmField
+val HORIZONTAL_DIRECTIONS = Direction.Plane.HORIZONTAL.toList()
+@JvmField
+val VERTICAL_DIRECTIONS = Direction.Plane.VERTICAL.toList()
+
 
 // TODO: Twigonometry: java examples for everything, simpler docs, and more docs
 
@@ -92,43 +99,6 @@ class LeafPlacerContext(
         }
     }
 
-    enum class Sector(val bit: Int) {
-        N(0), NE(1), E(2), SE(3),
-        S(4), SW(5), W(6), NW(7);
-
-        val skip: Int get() = 1 shl bit
-    }
-
-
-    enum class LayerPattern {
-        CORNERS,        // just the 4 corners
-        CARDINALS,      // just N, E, S, W
-        DIAGONALS,      // just NE, SE, SW, NW
-        STRIPE_NS,      // north-south stripe
-        STRIPE_EW,      // east-west stripe
-        CROSS,          // + shape
-        X_SHAPE,        // x shape
-        RING,           // outer edge only
-        INNER;          // everything except outer edge
-
-        // RING and INNER can be achieved w hollow layers, they're more of a shorthand.
-    }
-
-    fun matchesPattern(pattern: LayerPattern, x: Int, z: Int, dist: Int, maxDist: Int): Boolean {
-        return when (pattern) {
-            LayerPattern.CORNERS -> abs(x) == abs(z) && abs(x) != 0
-            LayerPattern.CARDINALS -> (x == 0 || z == 0) && !(x == 0 && z == 0)
-            LayerPattern.DIAGONALS -> abs(x) == abs(z) && x != 0
-            LayerPattern.STRIPE_NS -> x == 0
-            LayerPattern.STRIPE_EW -> z == 0
-            LayerPattern.CROSS -> x == 0 || z == 0
-            LayerPattern.X_SHAPE -> abs(x) == abs(z)
-            LayerPattern.RING -> dist == maxDist
-            LayerPattern.INNER -> dist < maxDist
-        }
-    }
-
-
     /**
      * A horizontal layer
      *
@@ -143,7 +113,7 @@ class LeafPlacerContext(
      *  same as the vanilla condition for leaf decay.
      *  This just removes the unconnected leaves, you can substitute for that by slightly increasing [chance].
      * @param custom you can pass in your own code to be executed instead of the leaf placing function.
-     * Can be useful if you want to add custom conditions or place different blocks.
+     *  Can be useful if you want to add custom conditions or place different blocks.
      *
      * E.g., place a lantern below every other block in horizontal layer 2:
      * ```
@@ -169,8 +139,30 @@ class LeafPlacerContext(
         val removeIfDecays: Boolean = false,
         val pattern: LayerPattern? = null,
         val skipSector: Int? = null,
-        val custom: ((LeafPlacerContext, BlockPos, Int, Int, Int) -> Unit)? = null
-    )
+        val custom: ICustomLeafPlacer? = null
+    ) {
+        companion object {
+            /**
+             * On Java always use this method so you have overloads
+             *
+             * On Kotlin you can use the constructor just fine. Glory to optional parameters! For the emperor!
+             */
+            @JvmStatic
+            @JvmOverloads
+            fun create(
+                chance: Int,
+                guaranteed: Int = 0,
+                cap: Int = 100,
+                centricFactor: Double? = null,
+                removeIfDecays: Boolean = false,
+                pattern: LayerPattern? = null,
+                skipSector: Int? = null,
+                custom: ICustomLeafPlacer? = null
+            ): HorizontalLayer {
+                return HorizontalLayer(chance, guaranteed, cap, centricFactor, removeIfDecays, pattern, skipSector, custom)
+            }
+        }
+    }
 
     data class Candidate(
         val placePos: BlockPos,
@@ -449,13 +441,13 @@ class LeafPlacerContext(
             }
         }
 
-        // placing all selected candiates
+        // placing all selected candidates
         for (candidate in finalCandidates) {
             val dist = candidate.dist
             if (dist == 0) {
                 placeLeaf(candidate.placePos)
             } else {
-                layers[dist - 1].custom?.invoke(this, candidate.placePos, candidate.x, candidate.z, dist)
+                layers[dist - 1].custom?.place(candidate.placePos, candidate.x, candidate.z, dist)
                     ?: placeLeaf(candidate.placePos)
             }
         }
@@ -496,6 +488,7 @@ class LeafPlacerContext(
      * @see incDisc
      * @see incShape
      * */
+    @JvmOverloads
     fun square(
         pos: BlockPos,
         radius: Int,
@@ -510,6 +503,7 @@ class LeafPlacerContext(
      *  then the shape is copied over to all other positions.
      *  Useful for making shapes extend themselves without running the chances again.
      * */
+    @JvmOverloads
     fun square(
         positions: Iterable<BlockPos>,
         radius: Int,
@@ -550,6 +544,7 @@ class LeafPlacerContext(
      * @see square
      * @see incShape
      * */
+    @JvmOverloads
     fun incSquare(pos: BlockPos, centerChance: Int = 100, vararg layers: HorizontalLayer) =
         incShape(listOf(pos), centerChance, ShapeType.SQUARE, *layers)
 
@@ -560,6 +555,7 @@ class LeafPlacerContext(
      *  then the shape is copied over to all other positions.
      *  Useful for making shapes extend themselves without running the chances again.
      * */
+    @JvmOverloads
     fun incSquare(positions: Iterable<BlockPos>, centerChance: Int = 100, vararg layers: HorizontalLayer) =
         incShape(positions, centerChance, ShapeType.SQUARE, *layers)
 
@@ -576,6 +572,7 @@ class LeafPlacerContext(
      * @see incDiamond
      * @see incShape
      * */
+    @JvmOverloads
     fun diamond(
         pos: BlockPos,
         radius: Int,
@@ -590,6 +587,7 @@ class LeafPlacerContext(
      *  then the shape is copied over to all other positions.
      *  Useful for making shapes extend themselves without running the chances again.
      * */
+    @JvmOverloads
     fun diamond(
         positions: Iterable<BlockPos>,
         radius: Int,
@@ -629,6 +627,7 @@ class LeafPlacerContext(
      *  @see diamond
      *  @see incShape
      * */
+    @JvmOverloads
     fun incDiamond(pos: BlockPos, centerChance: Int = 100, vararg layers: HorizontalLayer) =
         incShape(pos, centerChance, ShapeType.DIAMOND, *layers)
 
@@ -639,6 +638,7 @@ class LeafPlacerContext(
      *  then the shape is copied over to all other positions.
      *  Useful for making shapes extend themselves without running the chances again.
      * */
+    @JvmOverloads
     fun incDiamond(positions: Iterable<BlockPos>, centerChance: Int = 100, vararg layers: HorizontalLayer) =
         incShape(positions, centerChance, ShapeType.DIAMOND, *layers)
 
@@ -656,13 +656,14 @@ class LeafPlacerContext(
      * @see incDisc
      * @see incShape
      * */
+    @JvmOverloads
     fun disc(
         pos: BlockPos,
         radius: Int,
         centerChance: Int = 100,
         chance: Int = 100,
         smooth: Boolean = true
-    ) = incDisc(pos, centerChance, smooth,*Array(radius) { HorizontalLayer(chance) })
+    ) = incDisc(pos, centerChance, smooth, *Array(radius) { HorizontalLayer(chance) })
 
     /**
      * See docs for similar overload taking in a single BlockPos.
@@ -671,13 +672,14 @@ class LeafPlacerContext(
      *  then the shape is copied over to all other positions.
      *  Useful for making shapes extend themselves without running the chances again.
      * */
+    @JvmOverloads
     fun disc(
         positions: Iterable<BlockPos>,
         radius: Int,
         centerChance: Int = 100,
         chance: Int = 100,
         smooth: Boolean = true
-    ) = incDisc(positions, centerChance, smooth,*Array(radius) { HorizontalLayer(chance) })
+    ) = incDisc(positions, centerChance, smooth, *Array(radius) { HorizontalLayer(chance) })
 
 
     /**
@@ -716,6 +718,7 @@ class LeafPlacerContext(
      * @see disc
      * @see incShape
      * */
+    @JvmOverloads
     fun incDisc(pos: BlockPos, centerChance: Int = 100, smooth: Boolean = true, vararg layers: HorizontalLayer) =
         incShape(pos, centerChance, ShapeType.DISC, *layers, discSmoothInternal = smooth)
 
@@ -726,7 +729,13 @@ class LeafPlacerContext(
      *  then the shape is copied over to all other positions.
      *  Useful for making shapes extend themselves without running the chances again.
      * */
-    fun incDisc(positions: Iterable<BlockPos>, centerChance: Int = 100, smooth: Boolean = true, vararg layers: HorizontalLayer) =
+    @JvmOverloads
+    fun incDisc(
+        positions: Iterable<BlockPos>,
+        centerChance: Int = 100,
+        smooth: Boolean = true,
+        vararg layers: HorizontalLayer
+    ) =
         incShape(positions, centerChance, ShapeType.DISC, *layers, discSmoothInternal = smooth)
 
 }

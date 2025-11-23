@@ -1,9 +1,9 @@
 package dev.maksiks.twigonometry.reference
 
+import dev.maksiks.twigonometry.api.LayerPattern
 import dev.maksiks.twigonometry.api.LeafPlacerContext
-import dev.maksiks.twigonometry.api.LeafPlacerContext.LayerPattern
 import dev.maksiks.twigonometry.api.LeafPlacerContext.HorizontalLayer
-import dev.maksiks.twigonometry.api.LeafPlacerContext.Sector
+import dev.maksiks.twigonometry.api.Sector
 import net.minecraft.core.BlockPos
 
 /**
