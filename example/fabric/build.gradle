@@ -52,3 +52,7 @@ loom {
         }
     }
 }
+
+fabricApi {
+    configureDataGeneration()
+}

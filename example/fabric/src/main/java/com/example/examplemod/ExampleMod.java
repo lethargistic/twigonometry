@@ -1,5 +1,8 @@
 package com.example.examplemod;
 
+import com.example.examplemod.block.ModBlocks;
+import com.example.examplemod.worldgen.tree.ModFoliagePlacerTypes;
+import com.example.examplemod.worldgen.tree.ModTrunkPlacerTypes;
 import net.fabricmc.api.ModInitializer;
 
 public class ExampleMod implements ModInitializer {
@@ -10,6 +13,13 @@ public class ExampleMod implements ModInitializer {
         // This method is invoked by the Fabric mod loader when it is ready
         // to load your mod. You can access Fabric and Common code in this
         // project.
+
+        /// **Vanilla setup:** Here we initialize our block registry.
+        ModBlocks.initialize();
+
+        /// **Vanilla setup:** Here we initialize our foliage placer type with Fabric's registry.
+        ModFoliagePlacerTypes.initialize();
+        ModTrunkPlacerTypes.initialize();
 
         // Use Fabric to bootstrap the Common mod.
         Constants.LOG.info("Hello Fabric world!");
