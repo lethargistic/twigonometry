@@ -1,6 +1,7 @@
 package com.example.examplemod.block;
 
 import com.example.examplemod.Constants;
+import com.example.examplemod.item.ModItems;
 import com.example.examplemod.worldgen.tree.ModTreeGrowers;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,26 +12,32 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SaplingBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
+import java.util.function.Supplier;
+
+/// **Vanilla setup:** here we register the block and assign the grower to the sapling.
 public class ModBlocks {
-    public static Block register(Block block, String name, boolean shouldRegisterItem) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, name);
+    public static final DeferredRegister.Blocks BLOCKS =
+            DeferredRegister.createBlocks(Constants.MOD_ID);
 
-        if (shouldRegisterItem) {
-            BlockItem blockItem = new BlockItem(block, new Item.Properties());
-            Registry.register(BuiltInRegistries.ITEM, id, blockItem);
-        }
+    /// the properties can be copied off any sapling, their props are all the same.
+    public static final DeferredBlock<Block> SIMPLE_EXAMPLE_SAPLING = registerBlock("simple_example_sapling",
+            () -> new SaplingBlock(ModTreeGrowers.SIMPLE_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)));
+    public static final DeferredBlock<Block> FANCY_EXAMPLE_SAPLING = registerBlock("fancy_example_sapling",
+            () -> new SaplingBlock(ModTreeGrowers.FANCY_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)));
 
-        return Registry.register(BuiltInRegistries.BLOCK, id, block);
+    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
+        DeferredBlock<T> toReturn = BLOCKS.register(name, block);
+        registerBlockItem(name, toReturn);
+        return toReturn;
     }
 
-    /// **Vanilla setup:** here we register the block and assign the grower to the sapling.
-    /// Also, the properties can be copied off any sapling, their props are all the same.
-    public static final Block EXAMPLE_SAPLING = register(
-            new SaplingBlock(ModTreeGrowers.FANCY_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)),
-            "example_sapling",
-            true
-    );
+    private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block) {
+        ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+    }
 
-    public static void initialize() {}
+    public static void register(IEventBus eventBus) {BLOCKS.register(eventBus);}
 }

@@ -28,6 +28,6 @@ public class ModTrunkPlacerTypes {
     public static void initialize() {
         /// Vanilla setup: Here we assign a shared variable for the common folder so we don't have to duplicate code
         /// for each modloader. This isn't necessary if you're not using Multiloader.
-        Shared.SHARED_FANCY_EXAMPLE_TRUNK_PLACER = FANCY_EXAMPLE_TRUNK_PLACER;
+        Shared.FANCY_TRUNK_SUPPLIER = () -> FANCY_EXAMPLE_TRUNK_PLACER;
     }
 }

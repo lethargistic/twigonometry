@@ -46,7 +46,7 @@ public class FancyExampleTrunkPlacer extends TrunkPlacer {
 
     @Override
     protected TrunkPlacerType<?> type() {
-        return Shared.SHARED_FANCY_EXAMPLE_TRUNK_PLACER;
+        return Shared.FANCY_TRUNK_SUPPLIER.get();
     }
 
     @Override

@@ -66,7 +66,7 @@ public class SimpleExampleFoliagePlacer extends FoliagePlacer {
 
     @Override
     protected FoliagePlacerType<?> type() {
-        return Shared.SHARED_SIMPLE_EXAMPLE_FOLIAGE_PLACER;
+        return Shared.SIMPLE_FOLIAGE_SUPPLIER.get();
     }
 
     /// current vertical position, used later

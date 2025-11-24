@@ -4,20 +4,21 @@ import com.example.examplemod.block.ModBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
 ///  **Vanilla setup:** makes the saplings usable as furnace fuel.
 public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
-    public ModItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-        super(output, registriesFuture);
+    public ModItemTagProvider(FabricDataOutput output,
+                              CompletableFuture<HolderLookup.Provider> registriesFuture,
+                              FabricTagProvider.BlockTagProvider blockTagProvider) {
+        super(output, registriesFuture, blockTagProvider);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider wrapperLookup) {
-        getOrCreateTagBuilder(ItemTags.SAPLINGS)
-                .add(ModBlocks.SIMPLE_EXAMPLE_SAPLING.asItem())
-                .add(ModBlocks.FANCY_EXAMPLE_SAPLING.asItem());
+        this.copy(BlockTags.SAPLINGS, ItemTags.SAPLINGS);
     }
 }

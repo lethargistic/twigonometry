@@ -4,6 +4,7 @@ import com.example.examplemod.worldgen.ModConfiguredFeatures;
 import com.example.examplemod.worldgen.ModPlacedFeatures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;
 
@@ -17,8 +18,9 @@ public class DataGenerators implements DataGeneratorEntrypoint {
 
         pack.addProvider(ModModelProvider::new);
         pack.addProvider(ModBlockLootTableProvider::new);
-        pack.addProvider(ModBlockTagProvider::new);
-        pack.addProvider(ModItemTagProvider::new);
+        FabricTagProvider.BlockTagProvider blockTagProvider = pack.addProvider(ModBlockTagProvider::new);
+        pack.addProvider((output, registriesFuture) ->
+                new ModItemTagProvider(output, registriesFuture, blockTagProvider));
         pack.addProvider(ModRegistryDataGenerator::new);
     }
 

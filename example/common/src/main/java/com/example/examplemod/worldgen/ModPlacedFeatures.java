@@ -25,7 +25,6 @@ public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SIMPLE_EXAMPLE_TREE_PLACED_KEY = registerKey("simple_example_tree_placed");
     public static final ResourceKey<PlacedFeature> FANCY_EXAMPLE_TREE_PLACED_KEY = registerKey("fancy_example_tree_placed");
 
-
     ///
     /// Here we register the datagen placed feature for the tree using PlacementUtils.countExtra
     /// whose args are:
