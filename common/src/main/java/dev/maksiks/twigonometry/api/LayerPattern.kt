@@ -2,13 +2,39 @@ package dev.maksiks.twigonometry.api
 
 import kotlin.math.abs
 
+/**
+ * LayerPatterns let you mask from your final layer into a certain shape,
+ * so:
+ * ```kotlin
+ * var layer = HorizontalLayer(100, 100, 100, null, false, LayerPattern.X_SHAPE);
+ * ctx.incSquare(pos, 100, layer, layer);
+ * ```
+ * Would result in:
+ *  ```
+ *  🏿 🆓 🆓 🆓 🏿 ️
+ *  🆓 🏿 🆓 🏿 🆓
+ *  🆓 🆓 🏿 🆓 🆓
+ *  🆓 🏿 🆓 🏿 🆓
+ *  🏿 🆓 🆓 🆓 🏿
+ *  ```
+ *
+ *  NOT LayerPatterns subtract from the final shape,
+ *  so NOT_X_SHAPE would be the inverse of that above:
+ *  ```
+ *  🆓 🏿 🏿 🏿 🆓 ️
+ *  🏿 🆓 🏿 🆓 🏿
+ *  🏿 🏿 🆓 🏿 🏿
+ *  🏿 🆓 🏿 🆓 🏿
+ *  🆓 🏿 🏿 🏿 🆓
+ *  ```
+ */
 enum class LayerPattern {
     CORNERS,        // just the 4 corners
     CARDINALS,      // just N, E, S, W
     DIAGONALS,      // just NE, SE, SW, NW
     STRIPE_NS,      // north-south stripe
     STRIPE_EW,      // east-west stripe
-    CROSS,          // + shape
+    PLUS,           // + shape
     X_SHAPE,        // x shape
     RING,           // outer edge only
     INNER,          // everything except the outer edge
@@ -19,7 +45,7 @@ enum class LayerPattern {
     NOT_DIAGONALS,
     NOT_STRIPE_NS,
     NOT_STRIPE_EW,
-    NOT_CROSS,
+    NOT_PLUS,
     NOT_X_SHAPE,
     NOT_INNER, // same as RING
     NOT_RING; // same as INNER
@@ -35,7 +61,7 @@ enum class LayerPattern {
                 DIAGONALS -> abs(x) == abs(z) && x != 0
                 STRIPE_NS -> x == 0
                 STRIPE_EW -> z == 0
-                CROSS -> x == 0 || z == 0
+                PLUS -> x == 0 || z == 0
                 X_SHAPE -> abs(x) == abs(z)
                 RING -> dist == maxDist
                 INNER -> dist < maxDist
@@ -46,7 +72,7 @@ enum class LayerPattern {
                 NOT_DIAGONALS -> abs(x) != abs(z) || x == 0
                 NOT_STRIPE_NS -> x != 0
                 NOT_STRIPE_EW -> z != 0
-                NOT_CROSS -> x != 0 && z != 0
+                NOT_PLUS -> x != 0 && z != 0
                 NOT_X_SHAPE -> abs(x) != abs(z)
                 NOT_RING -> dist < maxDist
                 NOT_INNER -> dist == maxDist

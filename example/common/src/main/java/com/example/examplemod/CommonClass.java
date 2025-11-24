@@ -1,11 +1,9 @@
 package com.example.examplemod;
 
 import com.example.examplemod.platform.Services;
-import com.example.examplemod.worldgen.tree.foliage_placer.ExampleFoliagePlacer;
 import dev.maksiks.twigonometry.api.LeafPlacerContext;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 
 
 // This class is part of the common project meaning it is shared between all supported loaders. Code written here can only

@@ -681,7 +681,6 @@ class LeafPlacerContext(
         smooth: Boolean = true
     ) = incDisc(positions, centerChance, smooth, *Array(radius) { HorizontalLayer(chance) })
 
-
     /**
      * Makes a disc with incremental chances for each layer.
      *

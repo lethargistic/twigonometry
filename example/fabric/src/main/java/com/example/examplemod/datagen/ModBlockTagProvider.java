@@ -18,6 +18,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void addTags(HolderLookup.Provider wrapperLookup) {
         getOrCreateTagBuilder(BlockTags.SAPLINGS)
-                .add(ModBlocks.EXAMPLE_SAPLING);
+                .add(ModBlocks.SIMPLE_EXAMPLE_SAPLING)
+                .add(ModBlocks.FANCY_EXAMPLE_SAPLING);
     }
 }

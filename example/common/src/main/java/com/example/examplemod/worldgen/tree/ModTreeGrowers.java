@@ -11,6 +11,8 @@ import java.util.Optional;
 /// Their sole purpose is to tell the sapling block in the loader's respective ModBlocks class what tree to grow.
 ///
 public class ModTreeGrowers {
-    public static final TreeGrower EXAMPLE_GROWER = new TreeGrower(Constants.MOD_ID + ":example",
-            Optional.empty(), Optional.of(ModConfiguredFeatures.EXAMPLE_TREE_KEY), Optional.empty());
+    public static final TreeGrower SIMPLE_EXAMPLE_GROWER = new TreeGrower(Constants.MOD_ID + ":simple_example",
+            Optional.empty(), Optional.of(ModConfiguredFeatures.SIMPLE_EXAMPLE_TREE_KEY), Optional.empty());
+    public static final TreeGrower FANCY_EXAMPLE_GROWER = new TreeGrower(Constants.MOD_ID + ":fancy_example",
+            Optional.empty(), Optional.of(ModConfiguredFeatures.FANCY_EXAMPLE_TREE_KEY), Optional.empty());
 }

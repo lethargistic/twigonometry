@@ -1,3 +1,4 @@
 {
-  "block.examplemod.example_sapling": "Example Sapling"
+  "block.examplemod.simple_example_sapling": "Simple Sapling",
+  "block.examplemod.fancy_example_sapling": "Fancy Sapling"
 }

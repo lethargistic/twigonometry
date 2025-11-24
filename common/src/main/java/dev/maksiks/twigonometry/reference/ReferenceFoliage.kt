@@ -166,7 +166,7 @@ class ReferenceFoliage {
             // cross pattern with 50% chance
             ctx.incSquare(
                 basePos.above(yOffset), 100,
-                *Array(radius) { HorizontalLayer(50, pattern = LayerPattern.CROSS) })
+                *Array(radius) { HorizontalLayer(50, pattern = LayerPattern.PLUS) })
             yOffset += spacing
 
             // diamond shape with diagonal pattern
@@ -184,12 +184,12 @@ class ReferenceFoliage {
             // fading cross
             ctx.incSquare(
                 basePos.above(yOffset), 100,
-                HorizontalLayer(100, pattern = LayerPattern.CROSS),
-                HorizontalLayer(75, pattern = LayerPattern.CROSS),
-                HorizontalLayer(50, pattern = LayerPattern.CROSS),
-                HorizontalLayer(25, pattern = LayerPattern.CROSS),
-                HorizontalLayer(10, pattern = LayerPattern.CROSS),
-                HorizontalLayer(5, pattern = LayerPattern.CROSS)
+                HorizontalLayer(100, pattern = LayerPattern.PLUS),
+                HorizontalLayer(75, pattern = LayerPattern.PLUS),
+                HorizontalLayer(50, pattern = LayerPattern.PLUS),
+                HorizontalLayer(25, pattern = LayerPattern.PLUS),
+                HorizontalLayer(10, pattern = LayerPattern.PLUS),
+                HorizontalLayer(5, pattern = LayerPattern.PLUS)
             )
             yOffset += spacing
 

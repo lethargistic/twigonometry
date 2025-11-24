@@ -4,7 +4,6 @@ import com.example.examplemod.block.ModBlocks;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +17,7 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider {
     @Override
     protected void addTags(HolderLookup.Provider wrapperLookup) {
         getOrCreateTagBuilder(ItemTags.SAPLINGS)
-                .add(ModBlocks.EXAMPLE_SAPLING.asItem());
+                .add(ModBlocks.SIMPLE_EXAMPLE_SAPLING.asItem())
+                .add(ModBlocks.FANCY_EXAMPLE_SAPLING.asItem());
     }
 }

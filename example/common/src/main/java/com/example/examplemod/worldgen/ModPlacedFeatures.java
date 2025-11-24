@@ -22,7 +22,8 @@ import java.util.List;
 /// you'd have to add it in its biome builder just as other features.
 ///
 public class ModPlacedFeatures {
-    public static final ResourceKey<PlacedFeature> EXAMPLE_TREE_PLACED_KEY = registerKey("example_tree_placed");
+    public static final ResourceKey<PlacedFeature> SIMPLE_EXAMPLE_TREE_PLACED_KEY = registerKey("simple_example_tree_placed");
+    public static final ResourceKey<PlacedFeature> FANCY_EXAMPLE_TREE_PLACED_KEY = registerKey("fancy_example_tree_placed");
 
 
     ///
@@ -49,10 +50,13 @@ public class ModPlacedFeatures {
     public static void bootstrap(BootstrapContext<PlacedFeature> context) {
         var configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
-        register(context, EXAMPLE_TREE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.EXAMPLE_TREE_KEY),
+        register(context, SIMPLE_EXAMPLE_TREE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SIMPLE_EXAMPLE_TREE_KEY),
                 VegetationPlacements.treePlacement(PlacementUtils.countExtra(1, 0.1f, 1),
                         Blocks.SPRUCE_SAPLING));
 
+        register(context, FANCY_EXAMPLE_TREE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.FANCY_EXAMPLE_TREE_KEY),
+                VegetationPlacements.treePlacement(PlacementUtils.countExtra(1, 0.1f, 1),
+                        Blocks.SPRUCE_SAPLING));
     }
 
     private static ResourceKey<PlacedFeature> registerKey(String name) {

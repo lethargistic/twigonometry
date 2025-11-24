@@ -15,7 +15,7 @@ import java.util.function.Function;
 public class TrunkPlacerUtils {
     public static boolean placeLogOnAxis(Direction dir, LevelSimulatedReader level, BiConsumer<BlockPos, BlockState> blockSetter, RandomSource random, BlockPos pos, TreeConfiguration config, Function<BlockState, BlockState> propertySetter) {
         if (TreeFeature.validTreePos(level, pos)) {
-            blockSetter.accept(pos, (BlockState) propertySetter.apply(config.trunkProvider.getState(random, pos).setValue(RotatedPillarBlock.AXIS, dir.getAxis())));
+            blockSetter.accept(pos, propertySetter.apply(config.trunkProvider.getState(random, pos).setValue(RotatedPillarBlock.AXIS, dir.getAxis())));
             return true;
         } else {
             return false;

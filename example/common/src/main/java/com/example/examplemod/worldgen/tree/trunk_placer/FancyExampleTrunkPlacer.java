@@ -1,15 +1,13 @@
 package com.example.examplemod.worldgen.tree.trunk_placer;
 
 import com.example.examplemod.Shared;
-import com.example.examplemod.worldgen.tree.foliage_placer.ExampleFoliagePlacer;
-import com.google.common.collect.ImmutableList;
+import com.example.examplemod.worldgen.tree.foliage_placer.FancyExampleFoliagePlacer;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
-import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
@@ -25,7 +23,7 @@ import static dev.maksiks.twigonometry.api.LeafPlacerContextKt.HORIZONTAL_DIRECT
 
 ///
 /// **Vanilla setup:** vanilla separates tree placement into two parts, a trunk placer for the logs,
-/// and a foliage placer ({@link ExampleFoliagePlacer}) for the leaves.
+/// and a foliage placer ({@link FancyExampleFoliagePlacer}) for the leaves.
 ///
 /// You can take a look at
 /// - {@link net.minecraft.world.level.levelgen.feature.trunkplacers}
@@ -37,18 +35,18 @@ import static dev.maksiks.twigonometry.api.LeafPlacerContextKt.HORIZONTAL_DIRECT
 /// tho they're coming soon/eventually. If you want to use the same features as the leaf placer you can create a context
 /// with custom foliage set to your log.
 ///
-public class ExampleTrunkPlacer extends TrunkPlacer {
-    public static final MapCodec<ExampleTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(
-            p_70261_ -> trunkPlacerParts(p_70261_).apply(p_70261_, ExampleTrunkPlacer::new)
+public class FancyExampleTrunkPlacer extends TrunkPlacer {
+    public static final MapCodec<FancyExampleTrunkPlacer> CODEC = RecordCodecBuilder.mapCodec(
+            p_70261_ -> trunkPlacerParts(p_70261_).apply(p_70261_, FancyExampleTrunkPlacer::new)
     );
 
-    public ExampleTrunkPlacer(int baseHeight, int heightRandA, int heightRandB) {
+    public FancyExampleTrunkPlacer(int baseHeight, int heightRandA, int heightRandB) {
         super(baseHeight, heightRandA, heightRandB);
     }
 
     @Override
     protected TrunkPlacerType<?> type() {
-        return Shared.SHARED_EXAMPLE_TRUNK_PLACER;
+        return Shared.SHARED_FANCY_EXAMPLE_TRUNK_PLACER;
     }
 
     @Override
@@ -104,7 +102,7 @@ public class ExampleTrunkPlacer extends TrunkPlacer {
         }
 
         /// you can use radiusOffset or doubleTrunk as a jank way to encode tree variants or any other data passed onto the leaf placer
-        /// in this case it's main foliage - doubleTrunk = false or branch - doubleTrunk = true (see {@link ExampleFoliagePlacer})
+        /// in this case it's main foliage - doubleTrunk = false or branch - doubleTrunk = true (see {@link FancyExampleFoliagePlacer})
         attachments.add(new FoliagePlacer.FoliageAttachment(pos.above(trunkHeight-1), HORIZONTAL_DIRECTIONS.indexOf(dir), false));
         return attachments;
     }

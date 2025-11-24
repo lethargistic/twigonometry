@@ -2,7 +2,10 @@ package dev.maksiks.twigonometry.api
 
 import net.minecraft.core.Direction
 
-
+/**
+ * Sectors let you subtract from the final layer shape,
+ * similar to a pie chart.
+ */
 enum class Sector(val bit: Int) {
     N(0), NE(1), E(2), SE(3),
     S(4), SW(5), W(6), NW(7);
@@ -10,6 +13,10 @@ enum class Sector(val bit: Int) {
     val skip: Int get() = 1 shl bit
 
     companion object {
+        /**
+         * Gets the corresponding sector to a vanilla Direction.
+         * Can accept diagonals e.g. (Direction.NORTH, Direction.West) = North-West = NE = 1.
+         */
         @JvmOverloads
         @JvmStatic
         fun getSectorByDirection(direction1: Direction, direction2: Direction? = null): Sector {

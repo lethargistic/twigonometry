@@ -15,7 +15,7 @@ public class ModBlockLootTableProvider extends FabricBlockLootTableProvider {
 
     @Override
     public void generate() {
-        dropSelf(ModBlocks.EXAMPLE_SAPLING);
-
+        dropSelf(ModBlocks.SIMPLE_EXAMPLE_SAPLING);
+        dropSelf(ModBlocks.FANCY_EXAMPLE_SAPLING);
     }
 }

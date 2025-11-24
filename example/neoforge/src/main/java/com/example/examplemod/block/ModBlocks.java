@@ -27,7 +27,7 @@ public class ModBlocks {
     /// **Vanilla setup:** here we register the block and assign the grower to the sapling.
     /// Also, the properties can be copied off any sapling, their props are all the same.
     public static final Block EXAMPLE_SAPLING = register(
-            new SaplingBlock(ModTreeGrowers.EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)),
+            new SaplingBlock(ModTreeGrowers.FANCY_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)),
             "example_sapling",
             true
     );

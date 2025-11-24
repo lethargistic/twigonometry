@@ -1,8 +1,9 @@
 package com.example.examplemod.worldgen;
 
 import com.example.examplemod.Constants;
-import com.example.examplemod.worldgen.tree.foliage_placer.ExampleFoliagePlacer;
-import com.example.examplemod.worldgen.tree.trunk_placer.ExampleTrunkPlacer;
+import com.example.examplemod.worldgen.tree.foliage_placer.FancyExampleFoliagePlacer;
+import com.example.examplemod.worldgen.tree.foliage_placer.SimpleExampleFoliagePlacer;
+import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
 
 ///
 /// ##### **Vanilla setup:** Configured features
@@ -39,7 +41,8 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStatePr
 /// - [NeoForge Modding Tutorial - Minecraft 1.21.1: Tree Generation | #36](https://www.youtube.com/watch?v=5_4mEDHqUR0&list=PLKGarocXCE1G6CQOoiYdMVx-E1d9F_itF&index=36)
 ///
 public class ModConfiguredFeatures {
-    public static ResourceKey<ConfiguredFeature<?, ?>> EXAMPLE_TREE_KEY = registerKey("example_tree");
+    public static ResourceKey<ConfiguredFeature<?, ?>> SIMPLE_EXAMPLE_TREE_KEY = registerKey("simple_example_tree");
+    public static ResourceKey<ConfiguredFeature<?, ?>> FANCY_EXAMPLE_TREE_KEY = registerKey("fancy_example_tree");
 
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
@@ -49,16 +52,28 @@ public class ModConfiguredFeatures {
         /// - {@link net.minecraft.world.level.levelgen.feature.trunkplacers)
         register(
                 context,
-                EXAMPLE_TREE_KEY,
+                SIMPLE_EXAMPLE_TREE_KEY,
+                Feature.TREE,
+                new TreeConfiguration.TreeConfigurationBuilder(
+                        BlockStateProvider.simple(Blocks.STRIPPED_DARK_OAK_LOG),
+                        new StraightTrunkPlacer(8, 1, 0),
+                        BlockStateProvider.simple(Blocks.CHERRY_LEAVES),
+                        new SimpleExampleFoliagePlacer(ConstantInt.of(0), ConstantInt.of(0), 0),
+                        new TwoLayersFeatureSize(1, 0, 1)).build()
+        );
+
+        register(
+                context,
+                FANCY_EXAMPLE_TREE_KEY,
                 Feature.TREE,
                 new TreeConfiguration.TreeConfigurationBuilder(
                         BlockStateProvider.simple(Blocks.STRIPPED_SPRUCE_LOG),
-                        new ExampleTrunkPlacer(6, 0, 0),
+                        new FancyExampleTrunkPlacer(6, 0, 0),
                         new WeightedStateProvider(SimpleWeightedRandomList.<BlockState>builder()
                                 .add(Blocks.AZALEA_LEAVES.defaultBlockState(), 4)
                                 .add(Blocks.FLOWERING_AZALEA_LEAVES.defaultBlockState(), 1)
                                 .build()),
-                        new ExampleFoliagePlacer(ConstantInt.of(0), ConstantInt.of(0), 0),
+                        new FancyExampleFoliagePlacer(ConstantInt.of(0), ConstantInt.of(0), 0),
                         new TwoLayersFeatureSize(1, 0, 1)).build()
         );
     }
