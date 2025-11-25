@@ -19,7 +19,7 @@ import java.util.List;
 /// ##### **Vanilla setup:** Placed Features
 /// This example provides tree generation with a biome modifier,
 /// if you're adding a custom biome, e.g. with Terrablender or a datapack,
-/// you'd have to add it in its biome builder just as other features.
+/// you'd have to add it in its biome builder (or .json entry) just as the other features.
 ///
 public class ModPlacedFeatures {
     public static final ResourceKey<PlacedFeature> SIMPLE_EXAMPLE_TREE_PLACED_KEY = registerKey("simple_example_tree_placed");

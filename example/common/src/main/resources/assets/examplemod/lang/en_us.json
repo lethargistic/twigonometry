@@ -1,4 +1,6 @@
 {
   "block.examplemod.simple_example_sapling": "Simple Sapling",
-  "block.examplemod.fancy_example_sapling": "Fancy Sapling"
+  "block.examplemod.fancy_example_sapling": "Fancy Sapling",
+
+  "creativetab.examplemod.example": "Example"
 }

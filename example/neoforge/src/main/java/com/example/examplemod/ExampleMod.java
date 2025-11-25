@@ -5,11 +5,13 @@ import com.example.examplemod.block.ModBlocks;
 import com.example.examplemod.item.ModItems;
 import com.example.examplemod.worldgen.tree.ModFoliagePlacerTypes;
 import com.example.examplemod.worldgen.tree.ModTrunkPlacerTypes;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 
 /// **Vanilla setup:** here we register our classes with Neo and initialize the mod
@@ -18,6 +20,8 @@ public class ExampleMod {
 
     public ExampleMod(IEventBus eventBus) {
         NeoForge.EVENT_BUS.register(this);
+
+        ModCreativeModeTabs.register(eventBus);
 
         ModTrunkPlacerTypes.TRUNK_PLACER_TYPES.register(eventBus);
         ModFoliagePlacerTypes.FOLIAGE_PLACER_TYPES.register(eventBus);

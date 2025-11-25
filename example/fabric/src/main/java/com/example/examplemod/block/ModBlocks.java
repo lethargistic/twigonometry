@@ -27,13 +27,13 @@ public class ModBlocks {
 
     /// the properties can be copied off any sapling, their props are all the same.
     public static final Block SIMPLE_EXAMPLE_SAPLING = register(
-            new SaplingBlock(ModTreeGrowers.SIMPLE_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)),
+            new SaplingBlock(ModTreeGrowers.SIMPLE_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING).noOcclusion()),
             "simple_example_sapling",
             true
     );
 
     public static final Block FANCY_EXAMPLE_SAPLING = register(
-            new SaplingBlock(ModTreeGrowers.FANCY_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)),
+            new SaplingBlock(ModTreeGrowers.FANCY_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING).noOcclusion()),
             "fancy_example_sapling",
             true
     );

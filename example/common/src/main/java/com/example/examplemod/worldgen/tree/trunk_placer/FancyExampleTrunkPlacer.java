@@ -60,6 +60,8 @@ public class FancyExampleTrunkPlacer extends TrunkPlacer {
     ) {
         /// here we set a dirt block under the tree,
         /// vanilla does this for most trees to replace the grass block below
+        /// the "dirt" is whatever is (optionally) passed into the dirtProvider
+        /// in configured feature
         setDirtAt(level, blockSetter, random, pos.below(), config);
 
         /// our foliage placer will be run once per each foliage attachment,

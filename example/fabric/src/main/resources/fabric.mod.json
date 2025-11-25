@@ -18,6 +18,9 @@
     "main": [
       "com.example.examplemod.ExampleMod"
     ],
+    "client": [
+      "com.example.examplemod.ExampleModClient"
+    ],
     "fabric-datagen": [
       "com.example.examplemod.datagen.DataGenerators"
     ]

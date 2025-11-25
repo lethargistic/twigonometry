@@ -7,6 +7,7 @@ import com.example.examplemod.worldgen.tree.foliage_placer.FancyExampleFoliagePl
 import com.example.examplemod.worldgen.tree.foliage_placer.SimpleExampleFoliagePlacer;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 
@@ -29,7 +30,7 @@ public class ModFoliagePlacerTypes {
     }
 
     public static void initialize() {
-        /// Vanilla setup: Here we assign a shared variable for the common folder so we don't have to duplicate code
+        /// here we assign a shared variable for the common folder so we don't have to duplicate code
         /// for each modloader. This isn't necessary if you're not using Multiloader.
         Shared.SIMPLE_FOLIAGE_SUPPLIER = () -> SIMPLE_EXAMPLE_FOLIAGE_PLACER;
         Shared.FANCY_FOLIAGE_SUPPLIER = () -> FANCY_EXAMPLE_FOLIAGE_PLACER;

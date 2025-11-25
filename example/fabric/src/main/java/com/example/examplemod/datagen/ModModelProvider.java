@@ -23,6 +23,8 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.createCrossBlock(ModBlocks.FANCY_EXAMPLE_SAPLING, BlockModelGenerators.TintState.TINTED);
     }
 
+    /// in Fabric unlike on Neo the render type is handled here instead {@ExampleModClient#onInitializeClient()}
+
     /// here we make a template to make a flat item using the texture from the textures/block folder.
     /// By default, it makes a cube 3d model of the block instead.
     @Override
