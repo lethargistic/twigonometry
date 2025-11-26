@@ -1,6 +1,9 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
+import com.example.examplemod.Constants;
 import com.example.examplemod.Shared;
+import com.example.examplemod.worldgen.tree.WildcardFoliageAttachment;
+import com.example.examplemod.worldgen.tree.WildcardFoliagePlacer;
 import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import com.mojang.datafixers.Products.P3;
 import com.mojang.datafixers.util.Pair;
@@ -24,7 +27,6 @@ import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +52,7 @@ import static dev.maksiks.twigonometry.api.LeafPlacerContextKt.HORIZONTAL_DIRECT
 /// LeafPlacerContext.ctx(level, blockSetter, random, config, null, false)
 ///```
 ///
-public class FancyExampleFoliagePlacer extends FoliagePlacer {
+public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
     public static final MapCodec<FancyExampleFoliagePlacer> CODEC = RecordCodecBuilder.mapCodec(instance -> blobParts(instance).apply(instance, FancyExampleFoliagePlacer::new));
     protected final int height;
 
@@ -72,30 +74,36 @@ public class FancyExampleFoliagePlacer extends FoliagePlacer {
     private Integer curY;
 
     @Override
-    protected void createFoliage(
+    public void createWildcardFoliage(
             LevelSimulatedReader level,
             FoliageSetter blockSetter,
             RandomSource random,
             TreeConfiguration config,
             int maxFreeTreeHeight,
-            FoliageAttachment attachment,
+            WildcardFoliageAttachment attachment,
             int foliageHeight,
-            int foliageRadius,
-            int offset
+            int foliageRadius
     ) {
         /// first of all we make a Twigonometry context, this is what we'll use for our placements
         LeafPlacerContext ctx = LeafPlacerContext.ctx(level, blockSetter, random, config, null, false);
+        /// you change these params mid-way with a setter at any time btw, e.g.
+        ctx.setDebug(true);
 
         /// this is the starting position for placement
-        /// here we return positions like we need to instead of vanilla does
+        /// here we return positions like we need to instead of whatever vanilla does
         /// so no need to lower it unlike in {@link SimpleExampleFoliagePlacer}
         BlockPos trunkPos = attachment.pos();
-        /// here we take the value from the attachment to determine if it's a branch or not
-        boolean notBranch = !attachment.doubleTrunk();
-        /// here we take the value from the attachment to determine the branch direction
-        /// 0 = north, 1 = east, 2 = south, 3 = west
-        int r = attachment.radiusOffset();
-        Direction branchDir = HORIZONTAL_DIRECTIONS.get(r % 4);
+
+        /// here we take the values from the attachment
+        /// passing the custom ones requires some hoops so we have to get them
+        /// with the keys we setup earlier in the trunk placer
+        ///
+        /// each key must be declared right here, if an attachment is missing
+        /// one of the keys or can't find a key on the list
+        /// you'll get an error telling you what's missing
+        attachment.require("not_branch", "branch_dir");
+        boolean notBranch = attachment.getRequired("not_branch");
+        Direction branchDir = attachment.getRequired("branch_dir");
 
         /// a small set of utils for all of this that I use, it's mostly just a single variable (curY) so you
         /// don't have to manage the distance from the bottom/top every time

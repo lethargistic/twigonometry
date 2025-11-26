@@ -1,7 +1,7 @@
 accessWidener v2 named
 
 # FoliagePlacer.tryPlaceLeaf
-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer tryPlaceLeaf (Lnet/minecraft/world/level/LevelSimulatedReader;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageSetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;Lnet/minecraft/core/BlockPos;)Z
+transitive-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer tryPlaceLeaf (Lnet/minecraft/world/level/LevelSimulatedReader;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageSetter;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration;Lnet/minecraft/core/BlockPos;)Z
 
 # ArmorStand.setMarker (for LeafPlacer debugging)
-accessible method net/minecraft/world/entity/decoration/ArmorStand setMarker (Z)V
+transitive-accessible method net/minecraft/world/entity/decoration/ArmorStand setMarker (Z)V

@@ -16,7 +16,10 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "com.example.examplemod.ExampleMod"
+      {
+        "adapter": "kotlin",
+        "value": "com.example.examplemod.ExampleMod"
+      }
     ],
     "client": [
       "com.example.examplemod.ExampleModClient"
@@ -33,7 +36,8 @@
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
-    "java": ">=${java_version}"
+    "java": ">=${java_version}",
+    "fabric-language-kotlin": "${fabric_language_kotlin_version_range}"
   },
   "suggests": {
     "another-mod": "twigonometry"

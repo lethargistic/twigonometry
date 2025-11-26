@@ -1,6 +1,7 @@
 package com.example.examplemod.worldgen.tree.trunk_placer;
 
 import com.example.examplemod.Shared;
+import com.example.examplemod.worldgen.tree.WildcardFoliageAttachment;
 import com.example.examplemod.worldgen.tree.foliage_placer.FancyExampleFoliagePlacer;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -16,6 +17,7 @@ import net.minecraft.world.level.levelgen.feature.trunkplacers.TrunkPlacerType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
@@ -98,15 +100,20 @@ public class FancyExampleTrunkPlacer extends TrunkPlacer {
                 cursor = cursor.relative(dir).above();
                 this.placeLog(level, blockSetter, random, cursor, config);
 
-                /// passing the attachment onto the trunk
-                attachments.add(new FoliagePlacer.FoliageAttachment(cursor, HORIZONTAL_DIRECTIONS.indexOf(dir), true));
+                /// passing the attachment onto the leaves
+                attachments.add(new WildcardFoliageAttachment(cursor, HORIZONTAL_DIRECTIONS.indexOf(dir), false,
+                        Map.entry("branch_dir", dir),
+                        Map.entry("not_branch", false)
+                ));
             }
         }
 
         /// you can use radiusOffset or doubleTrunk as a jank way to encode tree variants or any other data passed onto the leaf placer
         /// in this case it's main foliage - doubleTrunk = false or branch - doubleTrunk = true (see {@link FancyExampleFoliagePlacer})
-        attachments.add(new FoliagePlacer.FoliageAttachment(pos.above(trunkHeight-1), HORIZONTAL_DIRECTIONS.indexOf(dir), false));
+        attachments.add(new WildcardFoliageAttachment(pos.above(trunkHeight-1), HORIZONTAL_DIRECTIONS.indexOf(dir), false,
+                Map.entry("branch_dir", dir),
+                Map.entry("not_branch", true)
+        ));
         return attachments;
     }
-
 }

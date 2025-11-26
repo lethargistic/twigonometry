@@ -1,40 +1,25 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
-import com.example.examplemod.Constants;
 import com.example.examplemod.Shared;
 import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import com.mojang.datafixers.Products.P3;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Instance;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
-import dev.maksiks.twigonometry.api.ICustomLeafPlacer;
 import dev.maksiks.twigonometry.api.LayerPattern;
 import dev.maksiks.twigonometry.api.LeafPlacerContext;
 import dev.maksiks.twigonometry.api.LeafPlacerContext.HorizontalLayer;
-import dev.maksiks.twigonometry.api.Sector;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.LevelSimulatedReader;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LanternBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacerType;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
-
-import static dev.maksiks.twigonometry.api.LeafPlacerContextKt.HORIZONTAL_DIRECTIONS;
 
 ///
 /// **Vanilla setup:** vanilla separates tree placement into two parts, a foliage placer for the leaves,

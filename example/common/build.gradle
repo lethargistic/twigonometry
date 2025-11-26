@@ -1,6 +1,7 @@
 plugins {
     id 'multiloader-common'
     id 'net.neoforged.moddev'
+    id 'org.jetbrains.kotlin.jvm'
 }
 
 neoForge {
@@ -32,6 +33,7 @@ dependencies {
 
     // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
     implementation group: 'dev.maksiks.twigonometry', name: "twigonometry-common-${root_minecraft_version}", version: "${root_version}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
 configurations {
@@ -53,4 +55,7 @@ artifacts {
 repositories {
     mavenLocal()
     mavenCentral()
+}
+kotlin {
+    jvmToolchain(21)
 }
