@@ -1,7 +1,5 @@
-package com.example.examplemod.worldgen.tree;
+package dev.maksiks.twigonometry.api;
 
-import com.example.examplemod.Shared;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;

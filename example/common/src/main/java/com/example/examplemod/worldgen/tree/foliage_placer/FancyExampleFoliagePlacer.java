@@ -1,8 +1,6 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
 import com.example.examplemod.Shared;
-import com.example.examplemod.worldgen.tree.WildcardFoliageAttachment;
-import com.example.examplemod.worldgen.tree.WildcardFoliagePlacer;
 import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import com.mojang.datafixers.Products.P3;
 import com.mojang.datafixers.util.Pair;
@@ -11,11 +9,8 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Instance;
 import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
-import dev.maksiks.twigonometry.api.ICustomLeafPlacer;
-import dev.maksiks.twigonometry.api.LayerPattern;
-import dev.maksiks.twigonometry.api.LeafPlacerContext;
+import dev.maksiks.twigonometry.api.*;
 import dev.maksiks.twigonometry.api.LeafPlacerContext.HorizontalLayer;
-import dev.maksiks.twigonometry.api.Sector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -33,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
-
-import static dev.maksiks.twigonometry.api.LeafPlacerContextKt.HORIZONTAL_DIRECTIONS;
 
 ///
 /// **Vanilla setup:** vanilla separates tree placement into two parts, a foliage placer for the leaves,
@@ -85,8 +78,8 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
     ) {
         /// first of all we make a Twigonometry context, this is what we'll use for our placements
         LeafPlacerContext ctx = LeafPlacerContext.ctx(level, blockSetter, random, config, null, 100, false);
-        /// you change params mid-way with a setter at any time btw, e.g.
-        ctx.setDebug(true);
+        /// you change these settings mid-way with a setter at any time btw, e.g.
+        // ctx.setDebug(true);
 
         /// this is the starting position for placement
         /// here we return positions like we need to instead of whatever vanilla does

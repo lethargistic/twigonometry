@@ -1,4 +1,4 @@
-package com.example.examplemod.worldgen.tree;
+package dev.maksiks.twigonometry.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer;

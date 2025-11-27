@@ -1,10 +1,10 @@
 package com.example.examplemod.worldgen.tree.trunk_placer;
 
 import com.example.examplemod.Shared;
-import com.example.examplemod.worldgen.tree.WildcardFoliageAttachment;
 import com.example.examplemod.worldgen.tree.foliage_placer.FancyExampleFoliagePlacer;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.maksiks.twigonometry.api.WildcardFoliageAttachment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;

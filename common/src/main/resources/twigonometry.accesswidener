@@ -5,3 +5,9 @@ transitive-accessible method net/minecraft/world/level/levelgen/feature/foliagep
 
 # ArmorStand.setMarker (for LeafPlacer debugging)
 transitive-accessible method net/minecraft/world/entity/decoration/ArmorStand setMarker (Z)V
+
+# Making FoliageAttachment extendable
+transitive-extendable class net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer$FoliageAttachment
+
+transitive-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer offset (Lnet/minecraft/util/RandomSource;)I
+transitive-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacerType <init> (Lcom/mojang/serialization/MapCodec;)V

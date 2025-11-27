@@ -1,8 +1,7 @@
-package com.example.examplemod.mixin;
+package dev.maksiks.twigonometry.mixin;
 
-import com.example.examplemod.Constants;
-import com.example.examplemod.worldgen.tree.WildcardFoliageAttachment;
-import com.example.examplemod.worldgen.tree.WildcardFoliagePlacer;
+import dev.maksiks.twigonometry.api.WildcardFoliageAttachment;
+import dev.maksiks.twigonometry.api.WildcardFoliagePlacer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelSimulatedReader;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
