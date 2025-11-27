@@ -1,4 +1,4 @@
-<p align="center"><img alt="twigonometry icon, a white tree cutout with a shadow on a green background" src="https://cdn.modrinth.com/data/cached_images/3b97dcf8377b4650f0e5ebf9044f13a83937c8e5.webp"></p>
+<p align="center"><img alt="twigonometry icon, a white tree cutout with a shadow on a green background" width=250px height=250px src="https://raw.githubusercontent.com/maksiksq/twigonometry/refs/heads/1.21.1/logo_small.webp"></p>
 
 ## Twigonometry:
 
