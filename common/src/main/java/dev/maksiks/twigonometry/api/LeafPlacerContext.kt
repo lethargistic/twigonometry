@@ -185,7 +185,7 @@ class LeafPlacerContext(
         if (isStepByStep()) {
             placementQueue.add(PlacementOperation(pos, null, false))
         } else {
-            placeAgingLeaf(pos, level, blockSetter, random, config)
+            FoliagePlacer.tryPlaceLeaf(level, blockSetter, random, config, pos)
         }
     }
 
@@ -210,6 +210,8 @@ class LeafPlacerContext(
      * Copy of [FoliagePlacer.tryPlaceLeaf] but places leaves with AGE 1 instead of 7.
      * This makes vanilla leaf decay check tick consistently on stepped spawning.
      * Performance implications of this should be minimal.
+     *
+     * TODO: Twigonometry: similar property check
      */
     private fun placeAgingLeaf(pos: BlockPos, level: LevelSimulatedReader, foliageSetter: FoliagePlacer.FoliageSetter, random: RandomSource, config: TreeConfiguration): Boolean {
         if (!TreeFeature.validTreePos(level, pos)) {
