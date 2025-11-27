@@ -12,8 +12,13 @@ import net.minecraft.world.level.LevelSimulatedReader
 import net.minecraft.world.level.LevelWriter
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockState
+import net.minecraft.world.level.block.state.properties.BlockStateProperties
+import net.minecraft.world.level.levelgen.feature.TreeFeature
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer
+import net.minecraft.world.level.material.FluidState
+import net.minecraft.world.level.material.Fluids
+import java.util.function.Predicate
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -42,6 +47,13 @@ val VERTICAL_DIRECTIONS = Direction.Plane.VERTICAL.toList()
  * The idea is using shapes with configurable placement chances to
  * sculpt your tree layer per layer or en masse.
  *
+ * @param step If null - blocks are placed like normal, otherwise specifies how many milliseconds
+ * to wait between each placement/carve. Useful for visualizations, debug or even simple animations.
+ * Leaves still decay though. With them placed incrementally this is usually not an issue, but if it is,
+ * for non-prod/showcasing you can set /gamerule randomTickSpreed to 0.
+ * **Important:** Does NOT run in worldgen, all blocks are placed immediately instead, this is more of a sapling thing.
+ *
+ *
  * @see square
  * @see incSquare
  * @see diamond
@@ -57,19 +69,23 @@ class LeafPlacerContext(
     var random: RandomSource,
     var config: TreeConfiguration,
     var foliage: Array<BlockState>? = null,
+    // in ms, not ticks! (1000 = 1 sec)
+    var step: Integer? = null,
     var debug: Boolean = false
 ) {
     companion object {
         @JvmStatic
+        @JvmOverloads
         fun ctx(
             level: LevelSimulatedReader,
             blockSetter: FoliagePlacer.FoliageSetter,
             random: RandomSource,
             config: TreeConfiguration,
-            foliage: Array<BlockState>? = null,
+            customFoliage: Array<BlockState>? = null,
+            step: Integer? = null,
             debug: Boolean = false
         ): LeafPlacerContext {
-            return LeafPlacerContext(level, blockSetter, random, config, foliage, debug)
+            return LeafPlacerContext(level, blockSetter, random, config, customFoliage, step, debug)
         }
 
         @JvmStatic
@@ -83,19 +99,150 @@ class LeafPlacerContext(
         val skipDiagonalSectors = Sector.NE.skip or Sector.NW.skip or Sector.SE.skip or Sector.SW.skip
     }
 
+    private data class PlacementOperation(
+        val pos: BlockPos,
+        val state: BlockState? = null,
+        val isCarving: Boolean = false
+    )
+
+    private val placementQueue = mutableListOf<PlacementOperation>()
+
+    fun processQueue(level: LevelSimulatedReader, blocksPerStep: Int = 1, onComplete: (() -> Unit)? = null) {
+        if (!isStepByStep() || placementQueue.isEmpty()) {
+            onComplete?.invoke()
+            return
+        }
+
+        val queue = placementQueue.toList()
+        placementQueue.clear()
+        val delayMs = step!!
+        val delayTicks = (delayMs.toDouble() / 50.0).coerceAtLeast(1.0).toInt()
+
+        var currentIndex = 0
+
+        fun processSetOfBlocks(): Boolean {
+            val endIndex = minOf(currentIndex + blocksPerStep, queue.size)
+
+            for (i in currentIndex until endIndex) {
+                val operation = queue[i]
+                if (operation.isCarving && operation.state != null) throw IllegalStateException("Twigonometry: it's time to sleep, im sure that coffee will wear off soon enough.")
+
+                if (operation.isCarving) {
+                    blockSetter.set(operation.pos, Blocks.AIR.defaultBlockState())
+                } else if (operation.state == null) {
+                    placeAgingLeaf(operation.pos, level, blockSetter, random, config)
+                } else {
+                    blockSetter.set(operation.pos, operation.state)
+                }
+            }
+
+            currentIndex = endIndex
+            return currentIndex >= queue.size
+        }
+
+        scheduleRepeatingTask(level, delayTicks) {
+            val isDone = processSetOfBlocks()
+            if (isDone) {
+                onComplete?.invoke()
+                false
+            } else {
+                true
+            }
+        }
+    }
+
+    private fun scheduleRepeatingTask(level: LevelSimulatedReader, delayTicks: Int, task: () -> Boolean) {
+        TwigScheduler.scheduleRepeating(level, delayTicks, task)
+    }
+
+    object TwigScheduler {
+        private var implementation: IScheduler? = null
+
+        @JvmStatic
+        fun init(impl: IScheduler) {
+            implementation = impl
+        }
+
+        /**
+         * Helper to schedule repeating tasks using the platform's scheduler
+         */
+        fun scheduleRepeating(level: LevelSimulatedReader, delayTicks: Int, task: () -> Boolean) {
+            implementation?.scheduleRepeating(level, delayTicks, task)
+                ?: throw IllegalStateException("Twigonometry: TwigScheduler not initialized! Possibly you forgot to install the fabric modImplementaiton?")
+        }
+
+        interface IScheduler {
+            fun scheduleRepeating(level: LevelSimulatedReader, delayTicks: Int, task: () -> Boolean)
+        }
+    }
+
+    fun isStepByStep(): Boolean {return step != null && step!! > 0}
+
+    /**
+     * Alternative to vanilla's FoliagePlacer.tryPlaceLeaf but integrated with [LeafPlacerContext.step]
+     */
     fun placeLeaf(pos: BlockPos) {
-        // cutting out the try part just to separate it tho it does the same thing
-        FoliagePlacer.tryPlaceLeaf(level, blockSetter, random, config, pos)
+        if (isStepByStep()) {
+            placementQueue.add(PlacementOperation(pos, null, false))
+        } else {
+            placeAgingLeaf(pos, level, blockSetter, random, config)
+        }
+    }
+
+    /**
+     * Same as
+     * ```
+     * FoliageSetter.set()
+     * ```
+     * but integrates with the queue if [step] is not null/0.
+     *
+     * Also, you have to guard it yourself! Bedrock replacing trees are a 1.8 thing, get on with the times.
+     */
+    fun placeSomethingElse(pos: BlockPos, blockstate: BlockState) {
+        if (isStepByStep()) {
+            placementQueue.add(PlacementOperation(pos, blockstate, false))
+        } else {
+            blockSetter.set(pos, blockstate)
+        }
+    }
+
+    /**
+     * Copy of [FoliagePlacer.tryPlaceLeaf] but places leaves with AGE 1 instead of 7.
+     * This makes vanilla leaf decay check tick consistently on stepped spawning.
+     * Performance implications of this should be minimal.
+     */
+    private fun placeAgingLeaf(pos: BlockPos, level: LevelSimulatedReader, foliageSetter: FoliagePlacer.FoliageSetter, random: RandomSource, config: TreeConfiguration): Boolean {
+        if (!TreeFeature.validTreePos(level, pos)) {
+            return false
+        } else {
+            var blockstate: BlockState = config.foliageProvider.getState(random, pos)
+            if (blockstate.hasProperty<Boolean?>(BlockStateProperties.WATERLOGGED)) {
+                blockstate = blockstate.setValue<Boolean?, Boolean?>(
+                    BlockStateProperties.WATERLOGGED,
+                    level.isFluidAtPosition(
+                        pos,
+                        Predicate { p_225638_: FluidState? -> p_225638_!!.isSourceOfType(Fluids.WATER) })
+                ) as BlockState
+            }
+
+            foliageSetter.set(pos, blockstate.setValue(BlockStateProperties.DISTANCE, 1))
+            return true
+        }
     }
 
     /**
      * Safely removes a leaf block
      **/
     fun removeLeaf(removePos: BlockPos) {
-        if (isCurrentFoliage(removePos) || isLeaves(removePos)
-            && !level.isStateAtPosition(removePos) { it.isAir }
-        ) {
-            blockSetter.set(removePos, Blocks.AIR.defaultBlockState())
+        val shouldRemove = isCurrentFoliage(removePos) || isLeaves(removePos)
+                && !level.isStateAtPosition(removePos) { it.isAir }
+
+        if (shouldRemove) {
+            if (isStepByStep()) {
+                placementQueue.add(PlacementOperation(removePos, null,true))
+            } else {
+                blockSetter.set(removePos, Blocks.AIR.defaultBlockState())
+            }
         }
     }
 

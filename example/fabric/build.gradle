@@ -20,8 +20,10 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
-    // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
+    // Twigonometry: the library requires Kotlin, on Fabric don't forget to add the adapter
+    // in fabric.mod.json as well
     modImplementation("net.fabricmc:fabric-language-kotlin:1.11.0+kotlin.2.0.0")
+    // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
     modImplementation group: 'dev.maksiks.twigonometry', name: "twigonometry-fabric-${root_minecraft_version}", version: "${root_version}"
 }
 

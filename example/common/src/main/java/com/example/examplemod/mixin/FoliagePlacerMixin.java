@@ -39,7 +39,6 @@ public abstract class FoliagePlacerMixin {
                     maxFreeTreeHeight, wildcardAttachment,
                     foliageHeight, foliageRadius
             );
-            Constants.LOG.info("HAIIIII");
             ci.cancel();
         }
     }

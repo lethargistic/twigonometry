@@ -1,0 +1,5 @@
+- [ ] todomaybe: optional polish+bugseek 
+- [ ] todomaybe: proper tutorial/wiki 
+- [ ] todomaybe: twigs and trunk utils
+- [ ] fixmaybe: worldgen stepped placement (pain) 
+- [ ] idea: template placement (same way as in Amaranth) 

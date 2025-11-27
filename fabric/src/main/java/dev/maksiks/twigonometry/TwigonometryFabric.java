@@ -1,8 +1,10 @@
 package dev.maksiks.twigonometry;
 
+import dev.maksiks.twigonometry.api.LeafPlacerContext;
+import dev.maksiks.twigonometry.event.FabricScheduler;
 import net.fabricmc.api.ModInitializer;
 
-public class Twigonometry implements ModInitializer {
+public class TwigonometryFabric implements ModInitializer {
     
     @Override
     public void onInitialize() {
@@ -10,6 +12,8 @@ public class Twigonometry implements ModInitializer {
         // This method is invoked by the Fabric mod loader when it is ready
         // to load your mod. You can access Fabric and Common code in this
         // project.
+
+        FabricScheduler.INSTANCE.register();
 
         // Use Fabric to bootstrap the Common mod.
         Constants.LOG.info("Twigonometry: Twigonometry fabric engines mathed");

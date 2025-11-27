@@ -14,6 +14,8 @@
   "license": "${license}",
   "icon": "${mod_id}.png",
   "environment": "*",
+
+  "#comment": "Twigonometry: Kotlin adapter",
   "entrypoints": {
     "main": [
       {
@@ -37,6 +39,7 @@
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
     "java": ">=${java_version}",
+
     "fabric-language-kotlin": "${fabric_language_kotlin_version_range}"
   },
   "suggests": {

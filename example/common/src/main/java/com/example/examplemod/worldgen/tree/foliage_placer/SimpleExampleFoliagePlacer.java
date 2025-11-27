@@ -70,7 +70,7 @@ public class SimpleExampleFoliagePlacer extends FoliagePlacer {
             int offset
     ) {
         /// first of all we make a Twigonometry context, this is what we'll use for our placements
-        LeafPlacerContext ctx = LeafPlacerContext.ctx(level, blockSetter, random, config, null, false);
+        LeafPlacerContext ctx = LeafPlacerContext.ctx(level, blockSetter, random, config, null, null, false);
 
         /// this is the top of the trunk, vanilla trunk placers return it one block above it so we lower it
         BlockPos trunkPos = attachment.pos().below();

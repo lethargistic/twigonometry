@@ -1,6 +1,5 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
-import com.example.examplemod.Constants;
 import com.example.examplemod.Shared;
 import com.example.examplemod.worldgen.tree.WildcardFoliageAttachment;
 import com.example.examplemod.worldgen.tree.WildcardFoliagePlacer;
@@ -85,8 +84,8 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
             int foliageRadius
     ) {
         /// first of all we make a Twigonometry context, this is what we'll use for our placements
-        LeafPlacerContext ctx = LeafPlacerContext.ctx(level, blockSetter, random, config, null, false);
-        /// you change these params mid-way with a setter at any time btw, e.g.
+        LeafPlacerContext ctx = LeafPlacerContext.ctx(level, blockSetter, random, config, null, 100, false);
+        /// you change params mid-way with a setter at any time btw, e.g.
         ctx.setDebug(true);
 
         /// this is the starting position for placement
@@ -258,9 +257,10 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
 
                 ctx.incDiamond(at.apply(curY), 100, layer);
             }
-
-            /// that's it, as for the rest, the world's your canvas baiiii
         }
+        ctx.processQueue(level, 1, null);
+
+        /// that's it, as for the rest, the world's your canvas baiiii
     }
 
     /// this function places the lanterns on chains
@@ -268,7 +268,7 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
                                                LeafPlacerContext ctx, boolean placeLeaf) {
         return (pos, x, z, dist) -> {
             if (placeLeaf) ctx.placeLeaf(pos);
-            safePlaceLanternHangie(level, pos, blockSetter, random);
+            safePlaceLanternHangie(ctx, level, pos, blockSetter, random);
         };
     }
 
@@ -293,12 +293,12 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
                 return;
             }
 
-            safePlaceLanternHangie(level, pos, blockSetter, random);
+            safePlaceLanternHangie(ctx, level, pos, blockSetter, random);
             placedHangie.set(true);
         };
     }
 
-    private static void safePlaceLanternHangie(LevelSimulatedReader level, BlockPos pos, FoliageSetter blockSetter, RandomSource random) {
+    private static void safePlaceLanternHangie(LeafPlacerContext ctx, LevelSimulatedReader level, BlockPos pos, FoliageSetter blockSetter, RandomSource random) {
         /// sometimes 1 chain, sometimes 2 chains
         int chainHeight = 1;
         if (random.nextInt(100) < 33) chainHeight = 2;
@@ -320,7 +320,7 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
         toPlace.add(
                 Pair.of(pos.below(i + 1),
                         Blocks.LANTERN.defaultBlockState().setValue(LanternBlock.HANGING, true)));
-        toPlace.forEach(pair -> blockSetter.set(pair.getFirst(), pair.getSecond()));
+        toPlace.forEach(pair -> ctx.placeSomethingElse(pair.getFirst(), pair.getSecond()));
     }
 
     @Override
