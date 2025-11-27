@@ -32,7 +32,7 @@ dependencies {
     annotationProcessor group: 'io.github.llamalad7', name: 'mixinextras-common', version: '0.3.5'
 
     // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
-    implementation group: 'dev.maksiks.twigonometry', name: "twigonometry-common-${root_minecraft_version}", version: "${root_version}"
+    implementation group: 'dev.maksiks.twigonometry', name: "twigonometry-neoforge-${root_minecraft_version}", version: "${root_version}"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
 }
 
