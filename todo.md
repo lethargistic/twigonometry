@@ -1,6 +1,7 @@
-- [ ] todomaybe: optional polish+bugseek 
-- [ ] todomaybe: proper tutorial/wiki 
-- [ ] todomaybe: twigs and trunk utils
-- [ ] fixmaybe: worldgen stepped placement (pain) 
+- [ ] todo maybe: optional polish+bugseek 
+- [ ] todo maybe: proper tutorial/wiki 
+- [ ] todo maybe: twigs and trunk utils
+- [ ] fix maybe: worldgen stepped placement (pain) 
 - [ ] idea: template placement (same way as in Amaranth) 
-- [ ] todomaybe: port to other versions (easy)
+- [ ] todo maybe: port to other versions (easy)
+- [ ] idea: simpler custom x*x saplings (e.g. dark oak)
