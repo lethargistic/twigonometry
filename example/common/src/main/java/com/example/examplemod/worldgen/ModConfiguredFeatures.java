@@ -45,7 +45,10 @@ public class ModConfiguredFeatures {
     public static ResourceKey<ConfiguredFeature<?, ?>> FANCY_EXAMPLE_TREE_KEY = registerKey("fancy_example_tree");
 
     public static void bootstrap(BootstrapContext<ConfiguredFeature<?, ?>> context) {
-        HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
+        /// nice to have thingie, can be used with e.g.
+        /// PlacementUtils.inlinePlaced(configuredFeatures.getOrThrow(ModConfiguredFeatures.FEATURE))
+        /// to not make a separate placed feature every time
+        // HolderGetter<ConfiguredFeature<?, ?>> configuredFeatures = context.lookup(Registries.CONFIGURED_FEATURE);
 
         /// You may also choose to use vanilla's placers from
         /// - {@link net.minecraft.world.level.levelgen.feature.foliageplacers)
@@ -58,7 +61,7 @@ public class ModConfiguredFeatures {
                         BlockStateProvider.simple(Blocks.STRIPPED_DARK_OAK_LOG),
                         new StraightTrunkPlacer(8, 1, 0),
                         BlockStateProvider.simple(Blocks.CHERRY_LEAVES),
-                        new SimpleExampleFoliagePlacer(ConstantInt.of(0), ConstantInt.of(0), 0),
+                        new SimpleExampleFoliagePlacer(ConstantInt.of(2), ConstantInt.of(0), 0),
                         new TwoLayersFeatureSize(1, 0, 1)).build()
         );
 
@@ -73,7 +76,7 @@ public class ModConfiguredFeatures {
                                 .add(Blocks.AZALEA_LEAVES.defaultBlockState(), 4)
                                 .add(Blocks.FLOWERING_AZALEA_LEAVES.defaultBlockState(), 1)
                                 .build()),
-                        new FancyExampleFoliagePlacer(ConstantInt.of(0), ConstantInt.of(0), 0),
+                        new FancyExampleFoliagePlacer(ConstantInt.of(5), ConstantInt.of(0), 0),
                         new TwoLayersFeatureSize(1, 0, 1)).build()
         );
     }

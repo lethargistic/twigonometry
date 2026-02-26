@@ -1,5 +1,6 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
+import com.example.examplemod.Constants;
 import com.example.examplemod.Shared;
 import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import com.mojang.datafixers.Products.P3;
@@ -80,6 +81,7 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
         LeafPlacerContext ctx = LeafPlacerContext.ctx(level, blockSetter, random, config, null, 100, false);
         /// you change these settings mid-way with a setter at any time btw, e.g.
         // ctx.setDebug(true);
+        /// also, start the game with the Intellij debugger to not have to restart it on every change
 
         /// this is the starting position for placement
         /// here we return positions like we need to instead of whatever vanilla does

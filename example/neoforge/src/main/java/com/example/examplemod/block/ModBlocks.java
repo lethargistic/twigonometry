@@ -22,8 +22,9 @@ import java.util.function.Supplier;
 public class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS =
             DeferredRegister.createBlocks(Constants.MOD_ID);
-
-    /// the properties can be copied off any sapling, their props are all the same.
+    
+    /// the properties can be copied off any sapling, their props are all the same,
+    /// except cherry has a different map color and sound.
     public static final DeferredBlock<Block> SIMPLE_EXAMPLE_SAPLING = registerBlock("simple_example_sapling",
             () -> new SaplingBlock(ModTreeGrowers.SIMPLE_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING)));
     public static final DeferredBlock<Block> FANCY_EXAMPLE_SAPLING = registerBlock("fancy_example_sapling",

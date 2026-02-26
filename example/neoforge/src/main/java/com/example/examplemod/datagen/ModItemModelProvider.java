@@ -10,7 +10,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
-/// **Vanilla setup:** here we generate the item models for the sapling.
+/// **Vanilla setup:** here we generate the item models for the saplings.
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
         super(output, Constants.MOD_ID, existingFileHelper);

@@ -10,8 +10,8 @@ import net.minecraft.data.models.model.ModelTemplates;
 import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.world.level.block.Block;
 
-/// **Vanilla setup:** here we generate the .json models for the sapling,
-/// so its texture is mapped onto it.
+/// **Vanilla setup:** here we generate the .json models for each sapling,
+/// so their texture is mapped onto them.
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
         super(output);

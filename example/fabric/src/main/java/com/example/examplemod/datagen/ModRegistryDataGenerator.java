@@ -7,7 +7,7 @@ import net.minecraft.core.registries.Registries;
 
 import java.util.concurrent.CompletableFuture;
 
-/// **Vanilla Setup:** here we hook up our configured and placed features
+/// **Vanilla setup:** here we hook up our configured and placed features
 public class ModRegistryDataGenerator extends FabricDynamicRegistryProvider {
     public ModRegistryDataGenerator(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);

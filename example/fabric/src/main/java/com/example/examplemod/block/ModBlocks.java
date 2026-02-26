@@ -25,7 +25,8 @@ public class ModBlocks {
         return Registry.register(BuiltInRegistries.BLOCK, id, block);
     }
 
-    /// the properties can be copied off any sapling, their props are all the same.
+    /// the properties can be copied off any sapling, their props are all the same,
+    /// except cherry has a different map color and sound.
     public static final Block SIMPLE_EXAMPLE_SAPLING = register(
             new SaplingBlock(ModTreeGrowers.SIMPLE_EXAMPLE_GROWER, BlockBehaviour.Properties.ofFullCopy(Blocks.SPRUCE_SAPLING).noOcclusion()),
             "simple_example_sapling",
