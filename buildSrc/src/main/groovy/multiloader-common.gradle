@@ -125,7 +125,7 @@ publishing {
     }
     repositories {
         maven {
-            url System.getenv('local_maven_url')
+            url System.getenv('local_maven_url') ?: uri("${System.getProperty('user.home')}/.m2/repository")
         }
     }
 }

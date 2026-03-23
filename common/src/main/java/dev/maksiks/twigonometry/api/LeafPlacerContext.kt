@@ -171,7 +171,9 @@ class LeafPlacerContext(
     /**
      * Needs to be run for stepped placement, i.e. when [step] in a placer is non-null
      */
-
+    fun processQueue(level: LevelSimulatedReader, blocksPerStep: Int = 1, onComplete: (() -> Unit)? = null) {
+        queue.processQueueInternal(level, blocksPerStep, onComplete)
+    }
 
     /**
      * Copy of [FoliagePlacer.tryPlaceLeaf] but places leaves with AGE 1 instead of 7.
@@ -180,7 +182,7 @@ class LeafPlacerContext(
      *
      * TODO: Twigonometry: similar property check
      */
-    private fun getDefinitelyAgingLeaf(
+    fun getDefinitelyAgingLeaf(
         pos: BlockPos,
         level: LevelSimulatedReader
     ): BlockState? {
