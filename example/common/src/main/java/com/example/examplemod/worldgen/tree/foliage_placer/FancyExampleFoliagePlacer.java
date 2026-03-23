@@ -1,6 +1,5 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
-import com.example.examplemod.Constants;
 import com.example.examplemod.Shared;
 import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import com.mojang.datafixers.Products.P3;
@@ -43,7 +42,7 @@ import java.util.function.Function;
 /// **Twigonometry:** this is where Twigonometry comes in, to begin making your foliage create a context. Take a look at the docstrings inside its class for more info.
 /// ```
 /// LeafPlacerContext.ctx(level, blockSetter, random, config, null, false)
-///```
+/// ```
 ///
 public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
     public static final MapCodec<FancyExampleFoliagePlacer> CODEC = RecordCodecBuilder.mapCodec(instance -> blobParts(instance).apply(instance, FancyExampleFoliagePlacer::new));
@@ -253,6 +252,9 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
                 ctx.incDiamond(at.apply(curY), 100, layer);
             }
         }
+
+        /// ctx.processQueue at the is required for stepped placement
+        /// so block-by-block
         ctx.processQueue(level, 1, null);
 
         /// that's it, as for the rest, the world's your canvas baiiii

@@ -6,6 +6,7 @@
 - [ ] todo maybe: worldgen stepped placement (pain) 
 - [ ] todo maybe: port to other versions (easy)
 - [ ] idea: simpler custom x*x saplings (e.g. dark oak)
+- [ ] fix minor: stepped placement stops if you leave mid-way i think right
 
 ## versatility:
 - [ ] todo: builder for Java users

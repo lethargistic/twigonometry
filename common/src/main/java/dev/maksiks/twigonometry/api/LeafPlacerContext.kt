@@ -1,6 +1,9 @@
 package dev.maksiks.twigonometry.api
 
 import dev.maksiks.twigonometry.api.LayerPattern.Companion.matchesPattern
+import dev.maksiks.twigonometry.internal.BlockSetterWrapper
+import dev.maksiks.twigonometry.internal.Internal
+import dev.maksiks.twigonometry.internal.PlacementQueue
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.network.chat.Component
@@ -18,7 +21,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.TreeConfigurati
 import net.minecraft.world.level.levelgen.feature.foliageplacers.FoliagePlacer
 import net.minecraft.world.level.material.FluidState
 import net.minecraft.world.level.material.Fluids
-import java.util.function.Predicate
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -34,6 +36,7 @@ val DIAGONALS: Array<Direction> = arrayOf(
 
 @JvmField
 val HORIZONTAL_DIRECTIONS = Direction.Plane.HORIZONTAL.toList()
+
 @JvmField
 val VERTICAL_DIRECTIONS = Direction.Plane.VERTICAL.toList()
 
@@ -51,6 +54,9 @@ val VERTICAL_DIRECTIONS = Direction.Plane.VERTICAL.toList()
  * to wait between each placement/carve. Useful for visualizations, debug or even simple animations.
  * Leaves still decay though. With them placed incrementally this is usually not an issue, but if it is,
  * for non-prod/showcasing you can set /gamerule randomTickSpreed to 0.
+ *
+ * **Important:** You need to run [processQueue] for the blocks to be placed!
+ *
  * **Important:** Does NOT run in worldgen, all blocks are placed immediately instead, this is more of a sapling thing.
  *
  *
@@ -99,62 +105,10 @@ class LeafPlacerContext(
         val skipDiagonalSectors = Sector.NE.skip or Sector.NW.skip or Sector.SE.skip or Sector.SW.skip
     }
 
-    private data class PlacementOperation(
-        val pos: BlockPos,
-        val state: BlockState? = null,
-        val isCarving: Boolean = false
-    )
+    @Internal
+    private val queue = PlacementQueue(BlockSetterWrapper.Foliage(blockSetter), step)
 
-    private val placementQueue = mutableListOf<PlacementOperation>()
-
-    fun processQueue(level: LevelSimulatedReader, blocksPerStep: Int = 1, onComplete: (() -> Unit)? = null) {
-        if (!isStepByStep() || placementQueue.isEmpty()) {
-            onComplete?.invoke()
-            return
-        }
-
-        val queue = placementQueue.toList()
-        placementQueue.clear()
-        val delayMs = step!!
-        val delayTicks = (delayMs.toDouble() / 50.0).coerceAtLeast(1.0).toInt()
-
-        var currentIndex = 0
-
-        fun processSetOfBlocks(): Boolean {
-            val endIndex = minOf(currentIndex + blocksPerStep, queue.size)
-
-            for (i in currentIndex until endIndex) {
-                val operation = queue[i]
-                if (operation.isCarving && operation.state != null) throw IllegalStateException("Twigonometry: it's time to sleep, im sure that coffee will wear off soon enough.")
-
-                if (operation.isCarving) {
-                    blockSetter.set(operation.pos, Blocks.AIR.defaultBlockState())
-                } else if (operation.state == null) {
-                    placeAgingLeaf(operation.pos, level, blockSetter, random, config)
-                } else {
-                    blockSetter.set(operation.pos, operation.state)
-                }
-            }
-
-            currentIndex = endIndex
-            return currentIndex >= queue.size
-        }
-
-        scheduleRepeatingTask(level, delayTicks) {
-            val isDone = processSetOfBlocks()
-            if (isDone) {
-                onComplete?.invoke()
-                false
-            } else {
-                true
-            }
-        }
-    }
-
-    private fun scheduleRepeatingTask(level: LevelSimulatedReader, delayTicks: Int, task: () -> Boolean) {
-        TwigScheduler.scheduleRepeating(level, delayTicks, task)
-    }
-
+    @Internal
     object TwigScheduler {
         private var implementation: IScheduler? = null
 
@@ -176,14 +130,22 @@ class LeafPlacerContext(
         }
     }
 
-    fun isStepByStep(): Boolean {return step != null && step!! > 0}
+    fun isStepByStep(): Boolean {
+        return step != null && step!! > 0
+    }
 
+    // TODO twig cur: check if works correctly
+    fun getCurrentLeaf(): BlockState {
+        return config.foliageProvider.getState(random, BlockPos.ZERO)
+    }
+
+    // TODO twig cur: check if custom foliage works correctly
     /**
      * Alternative to vanilla's FoliagePlacer.tryPlaceLeaf but integrated with [LeafPlacerContext.step]
      */
     fun placeLeaf(pos: BlockPos) {
         if (isStepByStep()) {
-            placementQueue.add(PlacementOperation(pos, null, false))
+            queue.enqueue(pos, getCurrentLeaf())
         } else {
             FoliagePlacer.tryPlaceLeaf(level, blockSetter, random, config, pos)
         }
@@ -196,15 +158,20 @@ class LeafPlacerContext(
      * ```
      * but integrates with the queue if [step] is not null/0.
      *
-     * Also, you have to guard it yourself! Bedrock replacing trees are a 1.8 thing, get on with the times.
+     * Also, you have to guard it yourself! Bedrock replacing trees is a 1.8 thing, get on with the times.
      */
     fun placeSomethingElse(pos: BlockPos, blockstate: BlockState) {
         if (isStepByStep()) {
-            placementQueue.add(PlacementOperation(pos, blockstate, false))
+            queue.enqueue(pos, blockstate)
         } else {
             blockSetter.set(pos, blockstate)
         }
     }
+
+    /**
+     * Needs to be run for stepped placement, i.e. when [step] in a placer is non-null
+     */
+
 
     /**
      * Copy of [FoliagePlacer.tryPlaceLeaf] but places leaves with AGE 1 instead of 7.
@@ -213,22 +180,24 @@ class LeafPlacerContext(
      *
      * TODO: Twigonometry: similar property check
      */
-    private fun placeAgingLeaf(pos: BlockPos, level: LevelSimulatedReader, foliageSetter: FoliagePlacer.FoliageSetter, random: RandomSource, config: TreeConfiguration): Boolean {
+    private fun getDefinitelyAgingLeaf(
+        pos: BlockPos,
+        level: LevelSimulatedReader
+    ): BlockState? {
         if (!TreeFeature.validTreePos(level, pos)) {
-            return false
+            return null
         } else {
-            var blockstate: BlockState = config.foliageProvider.getState(random, pos)
-            if (blockstate.hasProperty<Boolean?>(BlockStateProperties.WATERLOGGED)) {
-                blockstate = blockstate.setValue<Boolean?, Boolean?>(
+            var blockstate: BlockState = getCurrentLeaf();
+            if (blockstate.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                blockstate = blockstate.setValue(
                     BlockStateProperties.WATERLOGGED,
                     level.isFluidAtPosition(
-                        pos,
-                        Predicate { p_225638_: FluidState? -> p_225638_!!.isSourceOfType(Fluids.WATER) })
+                        pos
+                    ) { p_225638_: FluidState? -> p_225638_!!.isSourceOfType(Fluids.WATER) }
                 ) as BlockState
             }
 
-            foliageSetter.set(pos, blockstate.setValue(BlockStateProperties.DISTANCE, 1))
-            return true
+            return blockstate.setValue(BlockStateProperties.DISTANCE, 1);
         }
     }
 
@@ -241,7 +210,7 @@ class LeafPlacerContext(
 
         if (shouldRemove) {
             if (isStepByStep()) {
-                placementQueue.add(PlacementOperation(removePos, null,true))
+                queue.enqueueCarve(removePos)
             } else {
                 blockSetter.set(removePos, Blocks.AIR.defaultBlockState())
             }
@@ -308,7 +277,16 @@ class LeafPlacerContext(
                 skipSector: Int? = null,
                 custom: ICustomLeafPlacer? = null
             ): HorizontalLayer {
-                return HorizontalLayer(chance, guaranteed, cap, centricFactor, removeIfDecays, pattern, skipSector, custom)
+                return HorizontalLayer(
+                    chance,
+                    guaranteed,
+                    cap,
+                    centricFactor,
+                    removeIfDecays,
+                    pattern,
+                    skipSector,
+                    custom
+                )
             }
         }
     }
@@ -389,6 +367,7 @@ class LeafPlacerContext(
      * @see incDiamond
      * @see incDisc
      * */
+    @Internal
     private fun incShape(
         positions: Iterable<BlockPos>,
         centerChance: Int = 100,
@@ -412,7 +391,7 @@ class LeafPlacerContext(
                 val dist = calculateDist(shapeType, x, z)
 
                 if (shapeType == ShapeType.DISC) {
-                    if (outerCutoff == null) throw IllegalStateException("outerCutoff is null for DISC shape")
+                    if (outerCutoff == null) throw IllegalStateException("Twigonometry: outerCutoff is null for DISC shape")
                     val distSq = x * x + z * z
                     if (!discSmoothInternal && distSq > radius * radius) continue
                     if (discSmoothInternal && distSq > outerCutoff * outerCutoff) continue
@@ -454,7 +433,7 @@ class LeafPlacerContext(
 
                 // same filtering as in pass 1
                 if (shapeType == ShapeType.DISC) {
-                    if (outerCutoff == null) throw IllegalStateException("outerCutoff is null for DISC shape")
+                    if (outerCutoff == null) throw IllegalStateException("Twigonometry: outerCutoff is null for DISC shape")
                     val distSq = x * x + z * z
                     if (!discSmoothInternal && distSq > radius * radius) continue
                     if (discSmoothInternal && distSq > outerCutoff * outerCutoff) continue
