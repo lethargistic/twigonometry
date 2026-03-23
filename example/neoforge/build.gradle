@@ -8,6 +8,7 @@ def parentProps = new Properties()
 file('../../gradle.properties').withInputStream { parentProps.load(it) }
 ext {
     root_version = parentProps.getProperty('version')
+    root_kff_version = parentProps.getProperty('kff_version')
     root_minecraft_version = parentProps.getProperty('minecraft_version')
 }
 
@@ -54,7 +55,7 @@ neoForge {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 dependencies {
-    implementation 'thedarkcolour:kotlinforforge-neoforge:5.10.0'
+    implementation "thedarkcolour:kotlinforforge-neoforge:${root_kff_version}"
     // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
     implementation group: 'dev.maksiks.twigonometry', name: "twigonometry-neoforge-${root_minecraft_version}", version: "${root_version}"
 }

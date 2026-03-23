@@ -9,6 +9,7 @@ file('../../gradle.properties').withInputStream { parentProps.load(it) }
 ext {
     root_version = parentProps.getProperty('version')
     root_minecraft_version = parentProps.getProperty('minecraft_version')
+    root_flk_version = parentProps.getProperty('flk_version')
 }
 
 dependencies {
@@ -22,7 +23,7 @@ dependencies {
 
     // Twigonometry: the library requires Kotlin, on Fabric don't forget to add the adapter
     // in fabric.mod.json as well
-    modImplementation("net.fabricmc:fabric-language-kotlin:1.11.0+kotlin.2.0.0")
+    modImplementation("net.fabricmc:fabric-language-kotlin:${root_flk_version}")
     // Twigonometry: referencing local maven, use the Modrinth maven repository instead!
     modImplementation group: 'dev.maksiks.twigonometry', name: "twigonometry-fabric-${root_minecraft_version}", version: "${root_version}"
 }

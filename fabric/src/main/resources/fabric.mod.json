@@ -8,8 +8,8 @@
     "${mod_author}"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://modrinth.com/mod/twigonometry",
+    "sources": "https://github.com/lethargistic/twigonometry"
   },
   "license": "${license}",
   "icon": "${mod_id}.png",
@@ -31,7 +31,7 @@
     "fabric-api": "*",
     "minecraft": "${minecraft_version}",
     "java": ">=${java_version}",
-    "fabric-language-kotlin": ">=1.11.0+kotlin.2.0.0"
+    "fabric-language-kotlin": ">=${flk_version}"
   },
   "suggests": {
     "another-mod": "*"

@@ -1,7 +1,7 @@
 modLoader = "kotlinforforge" #mandatory
-loaderVersion="[5.6,)" #mandatory
+loaderVersion="${kff_version_range}"
 license = "${license}" # Review your options at https://choosealicense.com/.
-#issueTrackerURL="https://change.me.to.your.issue.tracker.example.invalid/" #optional
+issueTrackerURL="https://github.com/lethargistic/amaranth/issues/" #optional
 [[mods]] #mandatory
 modId = "${mod_id}" #mandatory
 version = "${version}" #mandatory
@@ -28,6 +28,16 @@ type="required" #mandatory (Can be one of "required", "optional", "incompatible"
 versionRange = "${minecraft_version_range}"
 ordering = "NONE"
 side = "BOTH"
+
+# KFF
+[[dependencies.${mod_id}]]
+modId="kotlinforforge"
+type="required"
+versionRange="${kff_version_range}"
+ordering="NONE"
+side="BOTH"
+
+
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't
