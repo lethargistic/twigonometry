@@ -1,11 +1,22 @@
 package dev.maksiks.twigonometry.api
 
-import dev.maksiks.twigonometry.internal.Internal
+import dev.maksiks.twigonometry.Constants
+import dev.maksiks.twigonometry.internal.ITreePlacerContext
+import dev.maksiks.twigonometry.internal.QueuedStructureTemplate
 import net.minecraft.core.BlockPos
 import net.minecraft.resources.ResourceLocation
+import net.minecraft.server.level.ServerLevel
 import net.minecraft.util.RandomSource
-import net.minecraft.world.level.ServerLevelAccessor
+import net.minecraft.world.level.block.Mirror
+import net.minecraft.world.level.block.Rotation
+import net.minecraft.world.level.levelgen.structure.templatesystem.NopProcessor
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager
+import java.util.Optional
+
+
+// TODO: come up with some better way of masking
 
 /**
  *
@@ -36,21 +47,30 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
  *
  */
 class TemplatePlacerContext(
+    superCtx: ITreePlacerContext,
     var debug: Boolean = false
 ) {
     companion object {
         @JvmStatic
         @JvmOverloads
         fun ctx(
+            ctx: ITreePlacerContext,
             debug: Boolean = false
         ): TemplatePlacerContext {
-            return TemplatePlacerContext(debug)
+            return TemplatePlacerContext(ctx, debug)
         }
     }
+
+    var queue = superCtx.queue
+    val serverLevel: ServerLevel = superCtx.level.level
+    val server = serverLevel.server
+    val templateManager: StructureTemplateManager = server.structureManager
+    val random: RandomSource = superCtx.random
 
     /**
      *
      * TODO: Twigonometry: splice them in
+     * TODO: Twigonometry: settings
      * **Note:** Template context placements are spliced in between Placer context placements in order,
      * so you can use placers to change your template afterwards however you want.
      * E.g. carve out hz layer 3 at relative y 6, then replace it with a 50/50 hz layer of leaves
@@ -61,10 +81,25 @@ class TemplatePlacerContext(
     fun place(
         pos: BlockPos,
         loc: ResourceLocation,
+        rotation: Rotation = Rotation.NONE,
+        mirror: Mirror = Mirror.NONE,
         shuffleSettings: ShuffleSettings? = null,
         randomizationSettings: RandomizationSettings? = null,
-    ) = {
+    ) {
+        val templateVanilla: Optional<StructureTemplate?> = templateManager.get(loc)
+        if (!templateVanilla.isPresent) {
+            throw IllegalStateException("Twigonometry: NBT template not found $loc")
+        }
+        val template = QueuedStructureTemplate(templateVanilla.get())
 
+        val settings = StructurePlaceSettings()
+            .setRotation(rotation)
+            .setMirror(mirror)
+            .setIgnoreEntities(false)
+            .setRandom(random)
+            .addProcessor(NopProcessor.INSTANCE)
+
+        template.placeWithQueue(queue, serverLevel, pos, pos, settings, random, 19)
     }
 
     /**
@@ -128,21 +163,5 @@ class TemplatePlacerContext(
             result = 31 * result + (radialGradient?.contentHashCode() ?: 0)
             return result
         }
-    }
-
-    /**
-     * Heavily bastardized version of:
-     * [net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate.placeInWorld]
-     */
-    @Internal
-    fun placeWithQueue(
-        serverLevel: ServerLevelAccessor,
-        offset: BlockPos,
-        pos: BlockPos,
-        settings: StructurePlaceSettings,
-        random: RandomSource,
-        flags: Int
-    ) {
-
     }
 }

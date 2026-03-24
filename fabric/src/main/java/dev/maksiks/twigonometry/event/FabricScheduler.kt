@@ -4,7 +4,7 @@ import dev.maksiks.twigonometry.Constants
 import dev.maksiks.twigonometry.api.LeafPlacerContext
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents
 import net.minecraft.server.level.ServerLevel
-import net.minecraft.world.level.LevelSimulatedReader
+import net.minecraft.world.level.WorldGenLevel
 import java.util.concurrent.ConcurrentLinkedQueue
 
 private data class ScheduledTask(
@@ -51,7 +51,7 @@ object FabricScheduler : LeafPlacerContext.TwigScheduler.IScheduler {
         }
     }
 
-    override fun scheduleRepeating(level: LevelSimulatedReader, delayTicks: Int, task: () -> Boolean) {
+    override fun scheduleRepeating(level: WorldGenLevel, delayTicks: Int, task: () -> Boolean) {
         Constants.LOG.info("HAI KORE")
         val scheduledTask = ScheduledTask(delayTicks, task)
 

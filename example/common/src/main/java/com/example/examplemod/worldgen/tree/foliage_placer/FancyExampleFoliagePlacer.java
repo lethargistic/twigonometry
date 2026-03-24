@@ -1,5 +1,6 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
+import com.example.examplemod.Constants;
 import com.example.examplemod.Shared;
 import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import com.mojang.datafixers.Products.P3;
@@ -13,6 +14,7 @@ import dev.maksiks.twigonometry.api.*;
 import dev.maksiks.twigonometry.api.LeafPlacerContext.HorizontalLayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.LevelSimulatedReader;
@@ -253,9 +255,16 @@ public class FancyExampleFoliagePlacer extends WildcardFoliagePlacer {
             }
         }
 
-        /// ctx.processQueue at the is required for stepped placement
-        /// so block-by-block
-        ctx.processQueue(level, 1, null);
+        // TODO example cur: make template example (this is temp)
+        TemplatePlacerContext placerCtx = TemplatePlacerContext.ctx(ctx);
+
+        ResourceLocation nbt = ResourceLocation.fromNamespaceAndPath(Constants.MOD_ID, "twigonometry/ghost_post");
+        placerCtx.place(at.apply(curY), nbt);
+        Constants.LOG.info("placing twigonometry/ghost_post.nbt e ");
+
+        /// ctx.processQueue when you want to place the blocks is required
+        /// for stepped placement, so block-by-block
+        ctx.processQueue(1, null);
 
         /// that's it, as for the rest, the world's your canvas baiiii
     }

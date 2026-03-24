@@ -4,6 +4,7 @@ import dev.maksiks.twigonometry.Constants
 import dev.maksiks.twigonometry.api.LeafPlacerContext
 import net.minecraft.server.level.ServerLevel
 import net.minecraft.world.level.LevelSimulatedReader
+import net.minecraft.world.level.WorldGenLevel
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.neoforge.event.tick.ServerTickEvent
@@ -24,7 +25,7 @@ object NeoForgeScheduler : LeafPlacerContext.TwigScheduler.IScheduler {
     private val tasks = mutableListOf<ScheduledTask>()
     private val pendingTasks = ConcurrentLinkedQueue<ScheduledTask>()
 
-    override fun scheduleRepeating(level: LevelSimulatedReader, delayTicks: Int, task: () -> Boolean) {
+    override fun scheduleRepeating(level: WorldGenLevel, delayTicks: Int, task: () -> Boolean) {
         val scheduledTask = ScheduledTask(delayTicks, task)
 
         if (level is ServerLevel && level.server != null) {

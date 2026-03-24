@@ -1,5 +1,6 @@
 package com.example.examplemod.worldgen.tree.foliage_placer;
 
+import com.example.examplemod.Constants;
 import com.example.examplemod.Shared;
 import com.example.examplemod.worldgen.tree.trunk_placer.FancyExampleTrunkPlacer;
 import com.mojang.datafixers.Products.P3;
@@ -11,7 +12,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder.Mu;
 import dev.maksiks.twigonometry.api.LayerPattern;
 import dev.maksiks.twigonometry.api.LeafPlacerContext;
 import dev.maksiks.twigonometry.api.LeafPlacerContext.HorizontalLayer;
+import dev.maksiks.twigonometry.api.TemplatePlacerContext;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.LevelSimulatedReader;

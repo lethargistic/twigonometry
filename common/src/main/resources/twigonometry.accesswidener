@@ -11,3 +11,8 @@ transitive-extendable class net/minecraft/world/level/levelgen/feature/foliagepl
 
 transitive-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer offset (Lnet/minecraft/util/RandomSource;)I
 transitive-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacerType <init> (Lcom/mojang/serialization/MapCodec;)V
+
+# Templates
+transitive-accessible field net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate palettes Ljava/util/List;
+transitive-accessible field net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate entityInfoList Ljava/util/List;
+transitive-accessible field net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate size Lnet/minecraft/core/Vec3i;
