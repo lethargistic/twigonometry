@@ -6,3 +6,5 @@ A library mod to make generating trees in-code a little bit less painful. Lets y
 
 ## How to use:
 To get started check out the [wiki page](https://github.com/maksiksq/twigonometry/wiki/Getting-Started).
+
+Note: Twigonometry is currently in beta, while it's in a usable state, expect some breaking changes.
