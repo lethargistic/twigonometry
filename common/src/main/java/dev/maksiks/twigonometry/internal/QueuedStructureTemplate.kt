@@ -7,11 +7,11 @@ import net.minecraft.core.Direction
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.util.RandomSource
 import net.minecraft.world.Clearable
-import net.minecraft.world.RandomizableContainer
 import net.minecraft.world.level.ServerLevelAccessor
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.LiquidBlockContainer
+import net.minecraft.world.level.block.state.BlockState
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate
 import net.minecraft.world.phys.shapes.BitSetDiscreteVoxelShape
@@ -69,6 +69,10 @@ class QueuedStructureTemplate(private val delegate: StructureTemplate) {
                 )) {
                     val blockPos = structureBlockInfo.pos
                     if (boundingBox == null || boundingBox.isInside(blockPos)) {
+                        val blockstate: BlockState =
+                            structureBlockInfo.state
+                                .mirror(settings.mirror)
+                                .rotate(settings.rotation)
                         val fluidState =
                             if (settings.shouldApplyWaterlogging()) serverLevel.getFluidState(blockPos) else null
                         val blockState =
@@ -78,12 +82,15 @@ class QueuedStructureTemplate(private val delegate: StructureTemplate) {
                             Clearable.tryClear(blockEntity)
 
                             // queued here
-                            // TODO twig now fix: it always places barries and only
+                            // TODO twig now fix: it always places barriers and only
                             queue.enqueue(blockPos, Blocks.BARRIER.defaultBlockState(), 20)
                         }
 
                         // TODO Twig cur: check if the lack of a check here breaks something
                         // kind of just assuming successful placement here as it's not critical for trees
+                        serverLevel.setBlock(blockPos, blockstate, flags)
+                        queue.enqueue(blockPos, blockstate, flags)
+
                         i = min(i, blockPos.x)
                         j = min(j, blockPos.y)
                         k = min(k, blockPos.z)

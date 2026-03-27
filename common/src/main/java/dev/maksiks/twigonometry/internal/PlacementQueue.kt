@@ -115,6 +115,7 @@ class PlacementQueue(
                     continue
                 }
                 if (level.setBlock(operation.pos, operation.state, operation.flags)) {
+                    Constants.LOG.info("Twigonoe: placing: $operation.pos")
                     if (operation.nbt != null) {
                         val blockEntity = level.getBlockEntity(operation.pos)
 

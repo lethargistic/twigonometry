@@ -20,6 +20,5 @@ public class TwigonometryNeo {
         // Use NeoForge to bootstrap the Common mod.
         Constants.LOG.info("Twigonometry: Twigonometry neoforge engines mathed");
         TwigonometryCommon.init();
-
     }
 }
